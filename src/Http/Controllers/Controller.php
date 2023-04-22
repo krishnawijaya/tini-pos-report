@@ -9,12 +9,12 @@ use Krishnawijaya\DodiUkirReport\Helpers\ResponseFormatter;
 
 class Controller extends BaseController
 {
-    public function showBill(Request $request, Model $model)
+    public function showBill(Request $request, $model)
     {
         return ResponseFormatter::success($model);
     }
 
-    public function showReport(Request $request, Model $model)
+    public function showReport(Request $request, $model)
     {
         return ResponseFormatter::success($model);
     }
