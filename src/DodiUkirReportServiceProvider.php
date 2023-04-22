@@ -19,6 +19,6 @@ class DodiUkirReportServiceProvider extends ServiceProvider
 
     public function boot()
     {
-        # code...
+        $this->loadMigrationsFrom(realpath(__DIR__ . '../migrations'));
     }
 }
