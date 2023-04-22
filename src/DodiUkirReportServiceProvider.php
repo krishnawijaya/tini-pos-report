@@ -2,7 +2,9 @@
 
 namespace Krishnawijaya\DodiUkirReport;
 
-class DodiUkirReportServiceProvider
+use Illuminate\Support\ServiceProvider;
+
+class DodiUkirReportServiceProvider extends ServiceProvider
 {
     public function register()
     {
