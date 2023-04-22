@@ -1,0 +1,24 @@
+{
+    "name": "krishnawijaya/dodi-ukir-report",
+    "autoload": {
+        "psr-4": {
+            "Krishnawijaya\\DodiUkirReport\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Krishna Wijaya",
+            "email": "krishnawijaya79@gmail.com"
+        }
+    ],
+    "require": {
+        "illuminate/support": "^8.83"
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Krishnawijaya\\DodiUkirReport\\"
+            ]
+        }
+    }
+}
