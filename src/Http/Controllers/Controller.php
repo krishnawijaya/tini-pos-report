@@ -9,13 +9,27 @@ use Krishnawijaya\DodiUkirReport\Helpers\ResponseFormatter;
 
 class Controller extends BaseController
 {
-    public function showBill(Request $request, $model)
+    public $model;
+
+    public function __construct(Model $model)
     {
-        return ResponseFormatter::success($model);
+        $this->model = $model;
     }
 
-    public function showReport(Request $request, $model)
+    public function queryBuilder()
     {
-        return ResponseFormatter::success($model);
+        return $this->model::query();
+    }
+
+    public function showBill(Request $request, $id)
+    {
+        $instance = $this->queryBuilder()->find($id);
+        return ResponseFormatter::success($instance);
+    }
+
+    public function showReport(Request $request, $id)
+    {
+        $instance = $this->queryBuilder()->find($id);
+        return ResponseFormatter::success($instance);
     }
 }
