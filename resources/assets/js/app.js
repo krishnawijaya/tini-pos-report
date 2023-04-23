@@ -1,1 +1,1 @@
-console.log('Hi Krishna!');
+alert('Hi Krishna!');
