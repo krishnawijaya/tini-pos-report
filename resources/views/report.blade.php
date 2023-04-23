@@ -1,5 +1,5 @@
 @extends("dodiukirreport::master")
 
-@section("content")
+@section("vue-content")
 <report />
 @endsection

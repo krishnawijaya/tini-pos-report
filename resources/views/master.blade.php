@@ -2,7 +2,7 @@
 
 @section("content")
 <div id="vue-app">
-    @yield("content")
+    @yield("vue-content")
 </div>
 @endsection
 
