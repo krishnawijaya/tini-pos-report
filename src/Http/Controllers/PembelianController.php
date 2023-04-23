@@ -11,4 +11,9 @@ class PembelianController extends Controller
     {
         parent::__construct($model);
     }
+
+    public function test()
+    {
+        return view('dodiukirreport::master');
+    }
 }

@@ -33,9 +33,4 @@ class Controller extends BaseController
         $instance = $this->queryBuilder()->find($id);
         return ResponseFormatter::success($instance);
     }
-
-    public function test()
-    {
-        return view('dodiukirreport::master');
-    }
 }
