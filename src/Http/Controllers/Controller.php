@@ -25,12 +25,14 @@ class Controller extends BaseController
     public function showBill(Request $request, $id)
     {
         $instance = $this->queryBuilder()->find($id);
-        return ResponseFormatter::success($instance);
+        // return ResponseFormatter::success($instance);
+        return view("dodiukirreport::bill");
     }
 
     public function showReport(Request $request, $id)
     {
         $instance = $this->queryBuilder()->find($id);
-        return ResponseFormatter::success($instance);
+        // return ResponseFormatter::success($instance);
+        return view("dodiukirreport::report");
     }
 }
