@@ -9,7 +9,7 @@ Route::group(['as' => 'dodiukirreport.'], function () {
     Route::get('/persediaan/nota/{id}', [PersediaanController::class, 'showBill']);
     Route::get('/penjualan/nota/{id}', [PenjualanController::class, 'showBill']);
 
-    Route::get('/pembelian/report/{id}', [PembelianController::class, 'showReport']);
-    Route::get('/persediaan/report/{id}', [PersediaanController::class, 'showReport']);
-    Route::get('/penjualan/report/{id}', [PenjualanController::class, 'showReport']);
+    Route::get('/pembelian/laporan/{id}', [PembelianController::class, 'showReport']);
+    Route::get('/persediaan/laporan/{id}', [PersediaanController::class, 'showReport']);
+    Route::get('/penjualan/laporan/{id}', [PenjualanController::class, 'showReport']);
 });
