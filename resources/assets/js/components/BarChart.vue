@@ -1,9 +1,9 @@
 <template>
-    <h1>Bill</h1>
+    <h1>Bar</h1>
 </template>
 
 <script>
 export default {
-    name: "Bill",
+    name: "BarChart"
 }
 </script>
