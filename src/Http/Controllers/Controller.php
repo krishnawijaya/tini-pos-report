@@ -2,6 +2,7 @@
 
 namespace Krishnawijaya\DodiUkirReport\Http\Controllers;
 
+use Illuminate\Contracts\View\View;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Database\Eloquent\Model;
@@ -31,5 +32,10 @@ class Controller extends BaseController
     {
         $instance = $this->queryBuilder()->find($id);
         return ResponseFormatter::success($instance);
+    }
+
+    public function test()
+    {
+        return view('dodiukirreport::master');
     }
 }
