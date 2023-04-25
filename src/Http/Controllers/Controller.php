@@ -2,11 +2,9 @@
 
 namespace Krishnawijaya\DodiUkirReport\Http\Controllers;
 
-use Illuminate\Contracts\View\View;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Database\Eloquent\Model;
-use Krishnawijaya\DodiUkirReport\Helpers\ResponseFormatter;
 
 class Controller extends BaseController
 {
@@ -17,6 +15,16 @@ class Controller extends BaseController
         $this->model = $model;
     }
 
+    public function getModelName()
+    {
+        return class_basename($this->model);
+    }
+
+    public function getModelIcon()
+    {
+        return $this->model::ICON;
+    }
+
     public function queryBuilder()
     {
         return $this->model::query();
@@ -24,15 +32,25 @@ class Controller extends BaseController
 
     public function showBill(Request $request, $id)
     {
-        $instance = $this->queryBuilder()->find($id);
-        // return ResponseFormatter::success($instance);
-        return view("dodiukirreport::bill");
+        $modelName = $this->getModelName();
+        $modelIcon = $this->getModelIcon();
+
+        return view("dodiukirreport::bill", compact("modelName", "modelIcon"));
     }
 
-    public function showReport(Request $request, $id)
+    public function showReport(Request $request)
     {
-        $instance = $this->queryBuilder()->find($id);
-        // return ResponseFormatter::success($instance);
-        return view("dodiukirreport::report");
+        $modelName = $this->getModelName();
+        $modelIcon = $this->getModelIcon();
+
+        return view("dodiukirreport::report", compact("modelName", "modelIcon"));
+    }
+
+    public function create(Request $request)
+    {
+        $modelName = $this->getModelName();
+        $modelIcon = $this->getModelIcon();
+
+        return view("dodiukirreport::create", compact("modelName", "modelIcon"));
     }
 }

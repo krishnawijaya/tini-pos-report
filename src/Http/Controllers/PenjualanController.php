@@ -2,8 +2,7 @@
 
 namespace Krishnawijaya\DodiUkirReport\Http\Controllers;
 
-use App\Models\Penjualan;
-use Illuminate\Support\Facades\Request;
+use Krishnawijaya\DodiUkirReport\Models\Penjualan;
 
 class PenjualanController extends Controller
 {

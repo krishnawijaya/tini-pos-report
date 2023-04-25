@@ -1,11 +1,13 @@
 <?php
 
-namespace App\Models;
+namespace Krishnawijaya\DodiUkirReport\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
 class Penjualan extends Model
 {
+    public const ICON = "voyager-dollar";
+
     protected $table = 'penjualan';
     protected $primaryKey = 'id_penjualan';
     protected $fillable = [

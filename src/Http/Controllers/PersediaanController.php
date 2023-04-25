@@ -2,8 +2,7 @@
 
 namespace Krishnawijaya\DodiUkirReport\Http\Controllers;
 
-use App\Models\Persediaan;
-use Illuminate\Support\Facades\Request;
+use Krishnawijaya\DodiUkirReport\Models\Persediaan;
 
 class PersediaanController extends Controller
 {
