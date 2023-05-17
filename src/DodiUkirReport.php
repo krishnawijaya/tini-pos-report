@@ -4,7 +4,7 @@ namespace Krishnawijaya\DodiUkirReport;
 
 class DodiUkirReport
 {
-    public function routes()
+    public static function routes()
     {
         require __DIR__ . '/../routes/dodi_ukir_report.php';
     }

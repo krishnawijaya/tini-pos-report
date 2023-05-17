@@ -16,13 +16,30 @@ class DodiUkirReportServiceProvider extends ServiceProvider
         $this->app->singleton('dodiukirreport', function () {
             return new DodiUkirReport();
         });
+
+        $this->registerPublishableResources();
     }
 
     public function boot()
     {
         $this->loadMigrationsFrom(realpath(__DIR__ . '../migrations'));
-        $this->loadViewsFrom(__DIR__ . '/../resources/views', 'dodiukirreport');
+        $this->loadViewsFrom(dirname(__DIR__) . '/resources/views', 'dodiukirreport');
 
-        $this->publishes([__DIR__ . '/../publishable/js' => public_path('vendor/dodiukirreport/js')]);
+        $this->publishes([dirname(__DIR__) . '/publishable/js' => public_path('vendor/dodiukirreport/js')]);
+    }
+
+    private function registerPublishableResources()
+    {
+        $publishablePath = dirname(__DIR__) . '/publishable';
+
+        $publishable = [
+            'seeds' => [
+                "{$publishablePath}/database/seeds/" => database_path(Seed::getFolderName()),
+            ],
+        ];
+
+        foreach ($publishable as $group => $paths) {
+            $this->publishes($paths, $group);
+        }
     }
 }

@@ -13,6 +13,8 @@
     <i class="@yield('vue_icon')"></i>
 
     @yield("vue_page_title")
+
+    @yield("vue_header_action")
 </h1>
 @endsection
 

@@ -1,3 +1,7 @@
 {
-    "/publishable/js/app.js": "/publishable/js/app.js"
+    "/publishable/js/app.js": "/publishable/js/app.js",
+    "/dist/fonts/materialdesignicons-webfont.eot": "/dist/fonts/materialdesignicons-webfont.eot",
+    "/dist/fonts/materialdesignicons-webfont.ttf": "/dist/fonts/materialdesignicons-webfont.ttf",
+    "/dist/fonts/materialdesignicons-webfont.woff": "/dist/fonts/materialdesignicons-webfont.woff",
+    "/dist/fonts/materialdesignicons-webfont.woff2": "/dist/fonts/materialdesignicons-webfont.woff2"
 }
