@@ -11,7 +11,8 @@ import * as components from "./components"
 import { aliases, mdi } from 'vuetify/iconsets/mdi'
 
 const vuetify = createVuetify({
-    // icons: { defaultSet: 'mdi' },
+    components: { ...vuetifyComponents, ...vuetifyLabs },
+    directives: vuetifyDirectives,
     icons: {
         defaultSet: 'mdi',
         aliases,
@@ -19,8 +20,6 @@ const vuetify = createVuetify({
             mdi,
         },
     },
-    directives: vuetifyDirectives,
-    components: { ...vuetifyComponents, ...vuetifyLabs },
 })
 
 createApp({ components }).use(vuetify).mount("#vue-app")
