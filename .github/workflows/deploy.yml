@@ -1,0 +1,58 @@
+name: Deploy to Server
+
+on: 
+    push:
+        branches:
+            - master
+
+jobs:
+    deploy:
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Checkout Main Repository
+              uses: actions/checkout@v2
+              with:
+                repository: krishnawijaya/dodi-ukir
+                path: main/
+
+            - name: Checkout Tools Repository
+              uses: actions/checkout@v2
+              with:
+                path: dodi-ukir-report/
+
+            - name: Setup PHP
+              uses: shivammathur/setup-php@v2
+              with:
+                php-version: '7.4'
+
+            - name: Install Dependencies
+              run: |
+               echo "========== DODI UKIR REPORT =========="
+               cd ./dodi-ukir-report
+               composer update --no-progress --no-scripts --no-interaction
+               composer install --no-progress --no-scripts --no-interaction
+               npm install --no-progress --ignore-scripts --no-audit --no-fund
+               npm run production
+
+               echo "========== MAIN =========="
+               cd ../main
+               composer update --no-progress --no-scripts --no-interaction
+               composer install --no-progress --no-scripts --no-interaction
+               npm install --no-progress --ignore-scripts --no-audit --no-fund
+               npm run production
+
+            - name: Setup SSH key
+              run: |
+               mkdir -p ~/.ssh/
+               echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+               chmod 600 ~/.ssh/id_rsa
+               ssh-keyscan -H dodiukir.com >> ~/.ssh/known-hosts
+
+            - name: Deploy to Server
+              run: |
+               rsync -azP --delete ./dodi-ukir-report ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:${{ secrets.SSH_DIR_PATH }}/dodi-ukir-report
+               rsync -azP --delete ./main ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:${{ secrets.SSH_DIR_PATH }}/dodi-ukir
+
+            - name: Clean up SSH key
+              run: rm ~/.ssh/id_rsa
