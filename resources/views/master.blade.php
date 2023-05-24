@@ -26,6 +26,11 @@
 </div>
 @endsection
 
+@section("css")
+<link href="/vendor/dodiukirreport/css/app.css"
+      rel="stylesheet">
+@endsection
+
 @section("javascript")
 <script src="/vendor/dodiukirreport/js/app.js"
         type="text/javascript"></script>

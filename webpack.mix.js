@@ -1,4 +1,7 @@
 const mix = require('laravel-mix')
 
-// mix.copy('node_modules/@mdi/font/fonts/', 'dist/fonts/')
-mix.js('resources/assets/js/app.js', 'publishable/js').vue({ version: 3 })
+mix
+    .copyDirectory('fonts', 'publishable/fonts')
+    .css('resources/assets/css/app.css', 'publishable/css')
+    .js('resources/assets/js/app.js', 'publishable/js')
+    .vue({ version: 3 })
