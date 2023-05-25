@@ -3,6 +3,7 @@
 Voyager::routes();
 
 Route::group(['as' => 'dodiukirreport.', 'namespace' => 'Krishnawijaya\DodiUkirReport\Http\Controllers'], function () {
+    Route::get('/logout', 'VoyagerController@logout');
     Route::get('/dashboard', 'DashboardController@show')->name('dashboard');
 
     Route::get('/pembelian/nota/{id}', 'PembelianController@showBill')->name('pembelian.bill');
