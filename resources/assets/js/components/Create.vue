@@ -166,6 +166,7 @@ export default {
         listBarangAvailable: [],
         listBarangInCart: [],
         selectedBarang: {
+            uid: "",
             harga: 0,
             jumlah: "",
         }
@@ -207,14 +208,14 @@ export default {
         onSelectedBarang(barang) {
             if (!barang) return
             barang.jumlah = ""
-            barang.uid = ""
+            barang.uid = Date.now() + (Math.random() + 1).toString(36).substring(7)
 
             this.selectedBarang = barang
             this.selectedBarangOnSelector = barang
         },
 
         addBarang() {
-            if (!this.selectedBarang.id_barang ||
+            if (!this.selectedBarang.uid ||
                 !this.selectedBarang.jumlah ||
                 this.selectedBarang.jumlah < 1) return
 
@@ -225,7 +226,7 @@ export default {
         },
 
         removeBarangFromCart(barang) {
-            const index = this.listBarangInCart.findIndex(item => item.id_barang == barang.value.id_barang)
+            const index = this.listBarangInCart.findIndex(item => item.uid == barang.value.uid)
             if (index == -1) return
 
             this.listBarangInCart.splice(index, 1)
@@ -234,6 +235,7 @@ export default {
         emptySelectedBarang() {
             this.selectedBarangOnSelector = undefined
             this.selectedBarang = {
+                uid: "",
                 harga: 0,
                 jumlah: "",
             }
