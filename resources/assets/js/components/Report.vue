@@ -2,37 +2,37 @@
     <v-container fluid>
         <v-row>
             <v-col>
-                <input class="w-100 bg-white px-5 py-3 rounded-lg elevation-1"
+                <input class="w-100 bg-white px-5 py-3 rounded elevation-1"
                        v-model="startDate"
                        type="date" />
             </v-col>
 
             <v-col>
-                <input class="w-100 bg-white px-5 py-3 rounded-lg elevation-1"
+                <input class="w-100 bg-white px-5 py-3 rounded elevation-1"
                        v-model="endDate"
                        type="date" />
             </v-col>
 
-            <v-col cols="1">
-                <v-btn class="rounded"
-                       @click="getReport"
-                       color="blue-darken-4">
-                    <i class="voyager-search" />
-                    Cari
-                </v-btn>
+            <v-col cols="1"
+                   class="d-flex justify-end align-center">
+                <v-btn color="blue-darken-4"
+                       icon="mdi-magnify"
+                       @click="getReport" />
             </v-col>
         </v-row>
 
         <v-row>
             <v-col>
-                <v-data-table-virtual class="elevation-1 rounded-lg"
+                <v-data-table-virtual class="elevation-1 rounded"
                                       :headers="headers"
                                       :items="items">
                     <template #item.actions="{ item }">
 
                         <v-btn @click="openReadPage(item)"
+                               color="yellow-darken-4"
                                variant="tonal"
-                               icon="mdi-home" />
+                               icon="mdi-eye"
+                               size="small" />
 
                     </template>
                 </v-data-table-virtual>
@@ -126,7 +126,8 @@ export default {
         },
 
         openReadPage(item) {
-            location.href = ""
+            const propertyNameID = `id_${this.getModelName}`
+            location.href += `/nota/${item.value[propertyNameID]}`
         }
     },
 

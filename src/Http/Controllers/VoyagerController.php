@@ -11,7 +11,7 @@ class VoyagerController extends BaseVoyagerController
     public function index()
     {
         if (Auth::user()->isKasir()) {
-            return redirect()->route('voyager.barang.index');
+            return redirect()->route('dodiukirreport.penjualan.create');
 
         } else {
             return redirect()->route('dodiukirreport.dashboard');

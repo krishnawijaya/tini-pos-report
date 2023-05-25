@@ -3,9 +3,9 @@
 @section("vue_icon", $modelIcon)
 
 @section("vue_page_title")
-{{ "Tambah " . $modelName }}
+{{ "Buat " . $modelName }}
 @endsection
 
 @section("vue_content")
-<create />
+<create model-name="{{ $modelName }}" />
 @endsection

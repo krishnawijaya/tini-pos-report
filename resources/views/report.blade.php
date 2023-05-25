@@ -6,16 +6,18 @@
 {{ "Laporan " . $modelName }}
 @endsection
 
+@if (strtolower($modelName) != "persediaan")
 @section("vue_header_action")
+
 <a href="{{ route('dodiukirreport.' . strtolower($modelName) . '.create') }}"
    class="btn btn-success btn-add-new">
 
-    {{-- @can('add', $post) --}}
     <i class="voyager-plus"></i>
     <span>{{ __('voyager::generic.add_new') }}</span>
-    {{-- @endcan --}}
 </a>
+
 @endsection
+@endif
 
 @section("vue_content")
 <report model-name="{{ $modelName }}" />

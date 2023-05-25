@@ -18,6 +18,9 @@ Route::group(['as' => 'dodiukirreport.', 'namespace' => 'Krishnawijaya\DodiUkirR
     Route::get('/penjualan/create', 'PenjualanController@create')->name('penjualan.create');
 
     Route::group(['prefix' => 'api', 'namespace' => 'Api', 'as' => 'api.'], function () {
+        Route::get('/barang', 'BarangController@index')->name('barang.index');
+        // Route::get('/pelanggan', 'PelangganController@index')->name('pelanggan.index');
+
         Route::get('/pembelian', 'PembelianController@index')->name('pembelian.index');
         Route::get('/persediaan', 'PersediaanController@index')->name('persediaan.index');
         Route::get('/penjualan', 'PenjualanController@index')->name('penjualan.index');
