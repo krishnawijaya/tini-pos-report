@@ -1,6 +1,6 @@
 import axios from "axios"
 
-export default class Helper {
+class Helper {
     static getBaseURL() {
         const url = new URL(location)
         return url.origin
@@ -50,4 +50,16 @@ export default class Helper {
         return value + text
     }
 
+    static getMixins() {
+        // TODO: (Documentation) Desctructurize line below and put note on every steps later for better readability.
+        const methods = Object.fromEntries(
+            Object.getOwnPropertyNames(Helper)
+                .filter(name => !['length', 'name', 'prototype'].includes(name))
+                .map(name => [name, Helper[name]])
+        )
+        return { methods }
+    }
 }
+
+const mixin = Helper.getMixins()
+export { Helper as default, mixin }

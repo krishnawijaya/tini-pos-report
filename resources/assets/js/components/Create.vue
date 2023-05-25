@@ -1,6 +1,5 @@
 <template>
     <v-container fluid>
-        <mmu></mmu>
         <v-row>
             <v-col cols="12"
                    sm="4">
@@ -147,10 +146,12 @@
 </template>
 
 <script>
-import Helper from "../helper";
+import { mixin } from "../helper";
 
 export default {
     name: "Create",
+    mixins: [mixin],
+
     data: () => ({
         headers: [
             { title: 'No.', key: 'numbering', align: 'center', sortable: false },
@@ -198,22 +199,15 @@ export default {
 
     methods: {
 
-        unitFormat(value) {
-            return Helper.unitFormat(value)
-        },
-
-        currencyFormat(value) {
-            return Helper.currencyFormat(value)
-        },
-
         async getListBarangAvailable() {
-            const { data } = await Helper.axios().get('/api/barang')
+            const { data } = await this.axios().get('/api/barang')
             this.listBarangAvailable = data.data
         },
 
         onSelectedBarang(barang) {
             if (!barang) return
             barang.jumlah = ""
+            barang.uid = ""
 
             this.selectedBarang = barang
             this.selectedBarangOnSelector = barang
@@ -225,7 +219,7 @@ export default {
                 this.selectedBarang.jumlah < 1) return
 
             const barang = this.selectedBarang
-            this.listBarangInCart.push(Helper.deepCopy(barang))
+            this.listBarangInCart.push(this.deepCopy(barang))
 
             this.emptySelectedBarang()
         },
@@ -251,7 +245,7 @@ export default {
 
         saveData() {
             const data = {}
-            Helper.axios().post('/api/pembelian/create', data)
+            this.axios().post('/api/pembelian/create', data)
         },
 
         backToBrowsePage() {
