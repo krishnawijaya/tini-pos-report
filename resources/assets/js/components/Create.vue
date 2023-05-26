@@ -1,5 +1,17 @@
 <template>
     <v-container fluid>
+        <v-row v-if="modelName.toLowerCase() == 'penjualan'">
+            <v-col cols="12">
+                <v-autocomplete :items="listPelangganAvailable"
+                                item-title="nama_pelanggan"
+                                v-model="selectedPelanggan"
+                                label="Pelanggan"
+                                variant="solo"
+                                returnObject
+                                hide-details />
+            </v-col>
+        </v-row>
+
         <v-row>
             <v-col cols="12"
                    sm="4">
@@ -152,6 +164,10 @@ export default {
     name: "Create",
     mixins: [mixin],
 
+    props: {
+        modelName: String,
+    },
+
     data: () => ({
         headers: [
             { title: 'No.', key: 'numbering', align: 'center', sortable: false },
@@ -162,7 +178,9 @@ export default {
             { title: '', key: 'action', align: 'center', sortable: false },
         ],
 
+        selectedPelanggan: undefined,
         selectedBarangOnSelector: undefined,
+        listPelangganAvailable: [],
         listBarangAvailable: [],
         listBarangInCart: [],
         selectedBarang: {
@@ -205,6 +223,11 @@ export default {
             this.listBarangAvailable = data.data
         },
 
+        async getListPelangganAvailable() {
+            const { data } = await this.axios().get('/api/pelanggan')
+            this.listPelangganAvailable = data.data
+        },
+
         onSelectedBarang(barang) {
             if (!barang) return
             barang.jumlah = ""
@@ -245,9 +268,14 @@ export default {
             return (Number(value.harga) * Number(value.jumlah)) ?? 0
         },
 
-        saveData() {
-            const data = {}
-            this.axios().post('/api/pembelian/create', data)
+        async saveData() {
+            const payload = {
+                listBarang: this.listBarangInCart,
+                pelanggan: this.selectedPelanggan,
+            }
+
+            await this.axios().post(`/api/${this.modelName.toLowerCase()}`, payload)
+            this.backToBrowsePage()
         },
 
         backToBrowsePage() {
@@ -259,6 +287,7 @@ export default {
 
     created() {
         this.getListBarangAvailable()
+        this.getListPelangganAvailable()
     }
 }
 </script>

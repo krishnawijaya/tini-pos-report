@@ -25,6 +25,7 @@ Route::group(['as' => 'dodiukirreport.', 'namespace' => 'Krishnawijaya\DodiUkirR
         Route::get('/pembelian', 'PembelianController@index')->name('pembelian.index');
         Route::get('/persediaan', 'PersediaanController@index')->name('persediaan.index');
         Route::get('/penjualan', 'PenjualanController@index')->name('penjualan.index');
+        Route::get('/pelanggan', 'PelangganController@index')->name('pelanggan.index');
 
         Route::post('/pembelian', 'PembelianController@create')->name('pembelian.create');
         Route::post('/persediaan', 'PersediaanController@create')->name('persediaan.create');

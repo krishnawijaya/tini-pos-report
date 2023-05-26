@@ -113,6 +113,9 @@ export default {
                 const { data } = await axios.get(url, { params })
 
                 this.items = data.data.map((item, index) => {
+                    if (item['pelanggan']) item['pelanggan'] = item['pelanggan']['nama_pelanggan'] ?? ""
+                    if (item['user']) item['kasir'] = item['user']['name'] ?? ""
+
                     item[`total_${this.getModelName}`] = this.unitFormat(item[`total_${this.getModelName}`])
                     item[`total_harga_${this.getModelName}`] = this.currencyFormat(item[`total_harga_${this.getModelName}`])
 
