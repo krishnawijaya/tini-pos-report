@@ -109,7 +109,6 @@ export default {
             const chartData = data.data
 
             for (const monthName in chartData) {
-                console.log(chartData[monthName]);
                 this.chartData.labels.push(monthName)
                 this.chartData.datasets[0].data.push(chartData[monthName])
             }
