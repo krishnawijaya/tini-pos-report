@@ -14,10 +14,11 @@ class CreateDetailPersediaanTable extends Migration
     public function up()
     {
         Schema::create('detail_persediaan', function (Blueprint $table) {
-            $table->id('id_penjualan');
+            $table->integer('id_persediaan');
             $table->integer('id_barang');
             $table->integer('jumlah');
             $table->integer('harga');
+            $table->string('jenis');
             $table->timestamps();
         });
     }

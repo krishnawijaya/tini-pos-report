@@ -42,10 +42,11 @@
 </template>
 
 <script>
-import axios from "axios";
+import { mixin } from "../helper";
 
 export default {
     name: "Report",
+    mixins: [mixin],
 
     props: {
         modelName: String,
@@ -58,25 +59,16 @@ export default {
     }),
 
     computed: {
-        getModelName() {
-            const modelName = this.modelName.toLowerCase()
-
-            if (!modelName) return ''
-            if (modelName == 'penjualan') return 'jual';
-
-            return modelName
-        },
-
         headers() {
             const header = [
                 { title: 'No.', key: 'item_no', align: 'center', sortable: false },
-                { title: 'Total Jumlah', key: `total_${this.getModelName}`, align: 'end' },
-                { title: 'Total Harga', key: `total_harga_${this.getModelName}`, align: 'end' },
-                { title: 'Tanggal', key: `tanggal_${this.getModelName}`, align: 'center', sortable: false },
+                { title: 'Total Jumlah', key: `total_${this.getModelName()}`, align: 'end' },
+                { title: 'Total Harga', key: `total_harga_${this.getModelName()}`, align: 'end' },
+                { title: 'Tanggal', key: `tanggal_${this.getModelName()}`, align: 'center', sortable: false },
                 { title: '', key: 'actions', align: 'center', sortable: false },
             ]
 
-            if (this.getModelName == 'jual') {
+            if (this.getModelName() == 'jual') {
                 header.splice(1, 0,
                     { title: 'Kasir', key: 'kasir' },
                     { title: 'Pelanggan', key: 'pelanggan' },
@@ -88,16 +80,11 @@ export default {
     },
 
     methods: {
-        unitFormat(value) {
-            return value += value < 1 ? ' unit' : ' units';
-        },
+        getModelName(fullForm = false) {
+            const modelName = this.modelName.toLowerCase()
+            if (!fullForm && modelName == 'penjualan') return 'jual';
 
-        currencyFormat(value) {
-            return value.toLocaleString("id-ID", {
-                style: "currency",
-                currency: "IDR",
-                maximumFractionDigits: 0,
-            })
+            return modelName ?? ''
         },
 
         async getReport() {
@@ -109,15 +96,14 @@ export default {
             }
 
             try {
-                const url = this.getModelName == 'jual' ? '/api/penjualan' : `/api/${this.getModelName}`
-                const { data } = await axios.get(url, { params })
+                const { data } = await this.axios().get(`/api/${this.getModelName(true)}`, { params })
 
                 this.items = data.data.map((item, index) => {
-                    if (item['pelanggan']) item['pelanggan'] = item['pelanggan']['nama_pelanggan'] ?? ""
-                    if (item['user']) item['kasir'] = item['user']['name'] ?? ""
+                    if (item.pelanggan) item.pelanggan = item.pelanggan.nama_pelanggan ?? ""
+                    if (item.user) item.kasir = item.user.name ?? ""
 
-                    item[`total_${this.getModelName}`] = this.unitFormat(item[`total_${this.getModelName}`])
-                    item[`total_harga_${this.getModelName}`] = this.currencyFormat(item[`total_harga_${this.getModelName}`])
+                    item[`total_${this.getModelName()}`] = this.unitFormat(item[`total_${this.getModelName()}`])
+                    item[`total_harga_${this.getModelName()}`] = this.currencyFormat(item[`total_harga_${this.getModelName()}`])
 
                     item.item_no = index + 1
                     return item
@@ -128,9 +114,9 @@ export default {
             }
         },
 
-        openReadPage(item) {
-            const propertyNameID = `id_${this.getModelName}`
-            location.href += `/nota/${item.value[propertyNameID]}`
+        openReadPage({ value }) {
+            const propertyNameID = `id_${this.getModelName(true)}`
+            location.href += `/nota/${value[propertyNameID]}`
         }
     },
 

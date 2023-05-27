@@ -3,6 +3,7 @@
 namespace Krishnawijaya\DodiUkirReport\Models;
 
 use App\Models\User;
+use App\Models\Barang;
 use App\Models\Pelanggan;
 use Illuminate\Database\Eloquent\Model;
 
@@ -29,5 +30,10 @@ class Penjualan extends Model
     public function pelanggan()
     {
         return $this->belongsTo(Pelanggan::class, 'id_pelanggan', 'id_pelanggan');
+    }
+
+    public function barang()
+    {
+        return $this->belongsToMany(Barang::class, 'detail_penjualan', 'id_penjualan', 'id_barang', 'id_penjualan', 'id_barang');
     }
 }

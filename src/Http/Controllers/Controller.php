@@ -30,12 +30,12 @@ class Controller extends BaseController
         return $this->model::query();
     }
 
-    public function showBill(Request $request, $id)
+    public function showDetails(Request $request, $id)
     {
         $modelName = $this->getModelName();
         $modelIcon = $this->getModelIcon();
 
-        return view("dodiukirreport::bill", compact("modelName", "modelIcon"));
+        return view("dodiukirreport::details", compact("modelName", "modelIcon"));
     }
 
     public function showReport(Request $request)

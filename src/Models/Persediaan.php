@@ -2,6 +2,7 @@
 
 namespace Krishnawijaya\DodiUkirReport\Models;
 
+use App\Models\Barang;
 use Illuminate\Database\Eloquent\Model;
 
 class Persediaan extends Model
@@ -15,4 +16,9 @@ class Persediaan extends Model
         'total_persediaan',
         'total_harga_persediaan',
     ];
+
+    public function barang()
+    {
+        return $this->belongsToMany(Barang::class, 'detail_persediaan', 'id_persediaan', 'id_barang', 'id_persediaan', 'id_barang');
+    }
 }

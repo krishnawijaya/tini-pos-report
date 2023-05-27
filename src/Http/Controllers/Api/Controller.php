@@ -4,23 +4,33 @@ namespace Krishnawijaya\DodiUkirReport\Http\Controllers\Api;
 
 use Carbon\Carbon;
 use App\Models\Barang;
-use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use Illuminate\Database\Eloquent\Model;
+use Krishnawijaya\DodiUkirReport\Models\Persediaan;
+use Illuminate\Routing\Controller as BaseController;
 use Krishnawijaya\DodiUkirReport\Helpers\ResponseFormatter;
+use Krishnawijaya\DodiUkirReport\Helpers\Toast;
 
 class Controller extends BaseController
 {
-    public $model;
+    public Model $model;
+    protected Model $newRecord;
+    protected Collection $listBarang;
 
     public function __construct(Model $model)
     {
         $this->model = $model;
     }
 
-    public function getModelName()
+    public function getModelName($forceLowerCase = false, $abbreviation = false)
     {
-        return class_basename($this->model);
+        $modelName = class_basename($this->model);
+
+        if ($forceLowerCase) $modelName = strtolower($modelName);
+        if ($abbreviation && strtolower($modelName) == "penjualan") $modelName = "jual";
+
+        return $modelName;
     }
 
     public function getModelIcon()
@@ -44,11 +54,8 @@ class Controller extends BaseController
             $query->whereBetween('created_at', [new Carbon($startDate), new Carbon($endDate)]);
         }
 
-        if (strtolower($this->getModelName()) == "penjualan") {
-            $query->with('user', 'pelanggan');
-        }
-
-        $data = $query->get();
+        if ($this->getModelName() == "Penjualan") $query->with('user', 'pelanggan');
+        $data = $query->latest()->get();
 
         return ResponseFormatter::success($data);
     }
@@ -62,34 +69,98 @@ class Controller extends BaseController
 
     public function create(Request $request)
     {
-        $listBarang = collect($request->input('listBarang', []));
-        $pelanggan = $request->input('pelanggan');
+        try {
+            $totalHarga = 0;
+            $totalJumlah = 0;
 
-        $totalHarga = 0;
-        $totalJumlah = 0;
+            $listBarang = collect($request->input('listBarang', []));
 
-        $listBarang->map(function ($barang) use (&$totalJumlah, &$totalHarga) {
-            $jumlah = (int) $barang['jumlah'] ?? 0;
-            $harga = (int) $barang['harga'] ?? 0;
+            $listBarang->each(function ($barangData) use (&$totalJumlah, &$totalHarga) {
 
-            $totalJumlah += $jumlah;
-            $totalHarga += $harga * $jumlah;
+                $barangData = collect($barangData);
+                $barang = Barang::find($barangData->get('id_barang'));
 
-            return new Barang($barang);
+                $harga = $barangData->get('harga', 0);
+                $jumlah = (int) $barangData->get('jumlah', 0);
+
+                if ($this->getModelName() == 'Penjualan') {
+                    if ($barang->stok < $jumlah) throw new \Exception("Stok Barang Tidak Cukup");
+
+                    $harga = $barang->harga;
+                }
+
+                $totalJumlah += $jumlah;
+                $totalHarga += $harga * $jumlah;
+            });
+
+            $modelName = $this->getModelName(true, true);
+
+            $newRecordData = collect([
+                "tanggal_$modelName" => now(),
+                "total_$modelName" => $totalJumlah,
+                "total_harga_$modelName" => $totalHarga,
+            ]);
+
+            if ($modelName == "jual") {
+                // TODO: Change database design, this logic will causing bug.
+                $idPelanggan = $request->input('pelanggan')['id_pelanggan'] ?? 0;
+
+                $newRecordData->put("id_user", auth()->user()->id);
+                $newRecordData->put("id_pelanggan", $idPelanggan);
+            }
+
+            $this->listBarang = $listBarang;
+            $this->newRecord = $this->queryBuilder()->create($newRecordData->toArray());
+            $this->makeTransactions();
+
+            Toast::success("{$this->getModelName()} berhasil dibuat!");
+            return ResponseFormatter::success($this->newRecord);
+        } catch (\Throwable $th) {
+
+            Toast::error($th->getMessage());
+            return ResponseFormatter::error($th->getMessage());
+        }
+    }
+
+    protected function makeTransactions()
+    {
+        $this->listBarang->each(function ($barangData) {
+            $actionType = $this->getModelName();
+
+            $barangData = collect($barangData);
+            $barang = Barang::find($barangData->get('id_barang'));
+
+            $this->newRecord->barang()
+                ->attach($barang->id_barang, [
+                    'harga' => $actionType == "Penjualan" ? $barang->harga : $barangData->get('harga', 0),
+                    'jumlah' => (int) $barangData->get('jumlah', 0),
+                ]);
+
+            if ($actionType == "Pembelian") $barang->stok += (int) $barangData->get('jumlah', 0);
+            elseif ($actionType == "Penjualan") $barang->stok -= (int) $barangData->get('jumlah', 0);
+
+            $barang->save();
+
+            // Calculating Persediaan
+            $totalHargaPerBarang = $barang->stok * $barang->harga;
+
+            $persediaan = Persediaan::whereHas('barang', function ($barangQuery) use ($barangData) {
+                $barangQuery->where('detail_persediaan.id_barang', $barangData->get('id_barang'));
+            })->first();
+
+            if (!$persediaan) $persediaan = new Persediaan();
+
+            $persediaan->tanggal_persediaan = now();
+            $persediaan->total_persediaan = $barang->stok;
+            $persediaan->total_harga_persediaan = $totalHargaPerBarang;
+
+            $persediaan->save();
+            $persediaan->barang()
+                ->attach($barang->id_barang, [
+                    'jenis' => $actionType,
+                    'harga' => $barang->harga,
+                    'jumlah' => (int) $barangData->get('jumlah', 0),
+                ]);
         });
-
-        $modelName = strtolower($this->getModelName());
-        if ($modelName == "penjualan") $modelName = "jual";
-
-        $newRecord = $this->queryBuilder()->create([
-            "id_user" => auth()->user()->id,
-            "id_pelanggan" => $pelanggan['id_pelanggan'],
-
-            "tanggal_$modelName" => new Carbon(),
-            "total_$modelName" => $totalJumlah,
-            "total_harga_$modelName" => $totalHarga,
-        ]);
-
-        return ResponseFormatter::success($newRecord);
     }
 }

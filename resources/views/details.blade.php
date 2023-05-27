@@ -7,5 +7,5 @@
 @endsection
 
 @section("vue_content")
-<bill />
+<item-details model-name="{{ $modelName }}" />
 @endsection

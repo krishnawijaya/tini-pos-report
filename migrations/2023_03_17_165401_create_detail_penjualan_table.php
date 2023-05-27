@@ -14,7 +14,7 @@ class CreateDetailPenjualanTable extends Migration
     public function up()
     {
         Schema::create('detail_penjualan', function (Blueprint $table) {
-            $table->id('id_penjualan');
+            $table->integer('id_penjualan');
             $table->integer('id_barang');
             $table->integer('jumlah');
             $table->integer('harga');

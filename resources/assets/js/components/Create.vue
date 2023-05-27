@@ -7,14 +7,14 @@
                                 v-model="selectedPelanggan"
                                 label="Pelanggan"
                                 variant="solo"
-                                returnObject
+                                return-object
                                 hide-details />
             </v-col>
         </v-row>
 
-        <v-row>
-            <v-col cols="12"
-                   sm="4">
+        <v-row class="mb-4">
+            <v-col :sm="modelName.toLowerCase() == 'pembelian' ? 3 : 4"
+                   cols="12">
                 <v-autocomplete :items="listBarangAvailable"
                                 @update:modelValue="onSelectedBarang"
                                 @click:clear="emptySelectedBarang"
@@ -22,22 +22,35 @@
                                 item-title="nama_barang"
                                 label="Barang"
                                 variant="solo"
-                                returnObject
+                                return-object
                                 hide-details
                                 clearable>
-                    <template #selection="{ item }">
-                        {{ item.value.nama_barang }} - {{ item.value.harga }}
+                    <template #selection="{ item }"
+                              v-if="modelName.toLowerCase() != 'pembelian'">
+                        {{ item.value.nama_barang }} - {{ currencyFormat(item.value.harga) }}
                     </template>
                 </v-autocomplete>
             </v-col>
 
-            <v-col cols="12"
-                   sm="4">
+            <v-col v-if="modelName.toLowerCase() == 'pembelian'"
+                   :sm="modelName.toLowerCase() == 'pembelian' ? 3 : 4"
+                   cols="12">
+                <v-text-field v-model="selectedBarang.harga"
+                              :hint="`Harga jual saat ini: ${currencyFormat(selectedBarang.harga)}`"
+                              variant="solo"
+                              label="Harga Beli">
+                </v-text-field>
+
+            </v-col>
+
+            <v-col :sm="modelName.toLowerCase() == 'pembelian' ? 2 : 4"
+                   cols="12">
                 <v-text-field v-model="selectedBarang.jumlah"
+                              :hint="`Stok saat ini: ${unitFormat(selectedBarang.stok)}`"
                               @keyup.enter="addBarang"
                               variant="solo"
-                              label="Jumlah"
-                              hide-details />
+                              label="Jumlah">
+                </v-text-field>
 
             </v-col>
 
@@ -60,12 +73,20 @@
             </v-col>
         </v-row>
 
-        <v-row class="px-3 pt-12">
+        <v-row class="px-3">
             <v-data-table-virtual class="elevation-1 rounded-lg"
                                   :headers="headers"
                                   :items="listBarangInCart">
                 <template #item.numbering="{ index }">
                     {{ index + 1 }}
+                </template>
+
+                <template #item.harga="{ item }">
+                    {{ currencyFormat(item.value.harga) }}
+                </template>
+
+                <template #item.jumlah="{ item }">
+                    {{ unitFormat(item.value.jumlah) }}
                 </template>
 
                 <template #item.subtotal="{ item }">
@@ -185,6 +206,7 @@ export default {
         listBarangInCart: [],
         selectedBarang: {
             uid: "",
+            stok: 0,
             harga: 0,
             jumlah: "",
         }
@@ -211,7 +233,7 @@ export default {
         },
 
         countSelectedBarangSubtotal() {
-            return (Number(this.selectedBarang.harga) * Number(this.selectedBarang.jumlah)) ?? 0
+            return this.currencyFormat((Number(this.selectedBarang.harga) * Number(this.selectedBarang.jumlah)) ?? 0)
         },
 
     },
@@ -248,8 +270,8 @@ export default {
             this.emptySelectedBarang()
         },
 
-        removeBarangFromCart(barang) {
-            const index = this.listBarangInCart.findIndex(item => item.uid == barang.value.uid)
+        removeBarangFromCart({ value }) {
+            const index = this.listBarangInCart.findIndex(item => item.uid == value.uid)
             if (index == -1) return
 
             this.listBarangInCart.splice(index, 1)
@@ -259,13 +281,14 @@ export default {
             this.selectedBarangOnSelector = undefined
             this.selectedBarang = {
                 uid: "",
+                stok: 0,
                 harga: 0,
                 jumlah: "",
             }
         },
 
         countSubtotal({ value }) {
-            return (Number(value.harga) * Number(value.jumlah)) ?? 0
+            return this.currencyFormat((Number(value.harga) * Number(value.jumlah)) ?? 0)
         },
 
         async saveData() {
@@ -274,8 +297,13 @@ export default {
                 pelanggan: this.selectedPelanggan,
             }
 
-            await this.axios().post(`/api/${this.modelName.toLowerCase()}`, payload)
-            this.backToBrowsePage()
+            try {
+                await this.axios().post(`/api/${this.modelName.toLowerCase()}`, payload)
+                this.backToBrowsePage()
+
+            } catch (error) {
+                location.reload()
+            }
         },
 
         backToBrowsePage() {

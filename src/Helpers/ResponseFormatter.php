@@ -15,14 +15,14 @@ class ResponseFormatter
 
     public static function success($data = null, $message = null)
     {
-        
+
         self::$response['meta']['message'] = $message;
         self::$response['data'] = $data;
 
         return response()->json(self::$response, self::$response['meta']['code']);
     }
 
-    public static function error($data = null, $message = null, $code = 400)
+    public static function error($message = null, $data = null, $code = 400)
     {
         self::$response['meta']['status'] = 'error';
         self::$response['meta']['code'] = $code;

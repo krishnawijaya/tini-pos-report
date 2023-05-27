@@ -2,6 +2,7 @@
 
 namespace Krishnawijaya\DodiUkirReport\Models;
 
+use App\Models\Barang;
 use Illuminate\Database\Eloquent\Model;
 
 class Pembelian extends Model
@@ -15,4 +16,9 @@ class Pembelian extends Model
         'total_pembelian',
         'total_harga_pembelian',
     ];
+
+    public function barang()
+    {
+        return $this->belongsToMany(Barang::class, 'detail_pembelian', 'id_pembelian', 'id_barang', 'id_pembelian', 'id_barang');
+    }
 }
