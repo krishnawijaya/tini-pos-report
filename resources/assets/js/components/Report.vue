@@ -117,7 +117,8 @@ export default {
         openReadPage({ value }) {
             const propertyNameID = `id_${this.getModelName(true)}`
             location.href += `/nota/${value[propertyNameID]}`
-        }
+        },
+
     },
 
     created() {

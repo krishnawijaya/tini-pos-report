@@ -2,11 +2,12 @@
 
 namespace Krishnawijaya\DodiUkirReport\Http\Controllers;
 
-use Illuminate\Routing\Controller as BaseController;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Request;
-use Krishnawijaya\DodiUkirReport\Helpers\ResponseFormatter;
 use Krishnawijaya\DodiUkirReport\Models\Pembelian;
 use Krishnawijaya\DodiUkirReport\Models\Penjualan;
+use Illuminate\Routing\Controller as BaseController;
+use Krishnawijaya\DodiUkirReport\Helpers\ResponseFormatter;
 
 class DashboardController extends BaseController
 {
@@ -20,7 +21,7 @@ class DashboardController extends BaseController
         $totalPenjualanThisMonth = Penjualan::whereMonth('created_at', now()->format('m'))->sum('total_harga_jual');
         $totalPembelianThisMonth = Pembelian::whereMonth('created_at', now()->format('m'))->sum('total_harga_pembelian');
 
-        $todayQuery = Penjualan::where('created_at', now());
+        $todayQuery = Penjualan::whereDate('created_at', now());
 
         $revenue = $todayQuery->sum('total_harga_jual');
         $totalTransactions = $todayQuery->count();
@@ -37,6 +38,19 @@ class DashboardController extends BaseController
 
     public function getChartData(Request $request)
     {
-        return ResponseFormatter::success();
+        $response = [];
+        $endDate = now();
+        $startDate = $endDate->copy()->subMonths(3)->startOfMonth();
+
+        $penjualan = Penjualan::whereBetween('created_at', [$startDate, $endDate])->get();
+
+        $penjualan->each(function ($penjualan) use (&$response) {
+            $monthName = Carbon::parse($penjualan->created_at)->format('F');
+
+            if (!isset($response[$monthName])) $response[$monthName] = $penjualan->total_harga_jual;
+            else  $response[$monthName] += $penjualan->total_harga_jual;
+        });
+
+        return ResponseFormatter::success($response);
     }
 }

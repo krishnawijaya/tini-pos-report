@@ -34,6 +34,7 @@ class Penjualan extends Model
 
     public function barang()
     {
-        return $this->belongsToMany(Barang::class, 'detail_penjualan', 'id_penjualan', 'id_barang', 'id_penjualan', 'id_barang');
+        return $this->belongsToMany(Barang::class, 'detail_penjualan', 'id_penjualan', 'id_barang', 'id_penjualan', 'id_barang')
+            ->withPivot('jumlah', 'harga');
     }
 }

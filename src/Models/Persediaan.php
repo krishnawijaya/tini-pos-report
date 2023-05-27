@@ -19,6 +19,7 @@ class Persediaan extends Model
 
     public function barang()
     {
-        return $this->belongsToMany(Barang::class, 'detail_persediaan', 'id_persediaan', 'id_barang', 'id_persediaan', 'id_barang');
+        return $this->belongsToMany(Barang::class, 'detail_persediaan', 'id_persediaan', 'id_barang', 'id_persediaan', 'id_barang')
+            ->withPivot('jumlah', 'harga', 'jenis');
     }
 }

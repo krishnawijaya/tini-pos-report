@@ -21,7 +21,8 @@ class Helper {
             currency: "IDR",
             maximumFractionDigits: 0,
         }
-        return value.toLocaleString("id-ID", options)
+
+        return Number(value).toLocaleString("id-ID", options)
     }
 
     static dateFormat(value, format = {}) {

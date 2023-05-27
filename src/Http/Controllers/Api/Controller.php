@@ -48,21 +48,22 @@ class Controller extends BaseController
         $startDate = $request->input('startDate');
         $endDate = $request->input('endDate');
 
-        $query = $this->queryBuilder();
+        $query = $this->queryBuilder()->with('barang');
 
         if ($startDate && $endDate) {
             $query->whereBetween('created_at', [new Carbon($startDate), new Carbon($endDate)]);
         }
 
-        if ($this->getModelName() == "Penjualan") $query->with('user', 'pelanggan');
         $data = $query->latest()->get();
+        if ($this->getModelName() == "Penjualan") $data->load('user', 'pelanggan');
 
         return ResponseFormatter::success($data);
     }
 
     public function show(Request $request, $id)
     {
-        $data = $this->queryBuilder()->findOrFail($id);
+        $data = $this->queryBuilder()->with('barang')->findOrFail($id);
+        if ($this->getModelName() == "Penjualan") $data->load('user', 'pelanggan');
 
         return ResponseFormatter::success($data);
     }

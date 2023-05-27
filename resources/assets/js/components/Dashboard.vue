@@ -14,27 +14,28 @@
                 <v-card title="Pendapatan Hari Ini">
                     <template #text>
                         <div class="text-h4 text-right">
-                            {{ topbarData.revenue }}
+                            {{ currencyFormat(topbarData.revenue) }}
                         </div>
                     </template>
                 </v-card>
             </v-col>
 
             <v-col>
-                <v-card title="Jumlah Transaksi">
+                <v-card title="Jumlah Transaksi Hari Ini">
                     <template #text>
                         <div class="text-h4 text-right">
                             {{ topbarData.total_transactions }}
+                            Transaksi
                         </div>
                     </template>
                 </v-card>
             </v-col>
 
             <v-col>
-                <v-card title="Laba Rugi">
+                <v-card title="Laba Rugi Bulan Ini">
                     <template #text>
                         <div class="text-h4 text-right">
-                            {{ topbarData.profit_and_loss }}
+                            {{ currencyFormat(topbarData.profit_and_loss) }}
                         </div>
                     </template>
                 </v-card>
@@ -45,14 +46,17 @@
             <v-col cols="12">
                 <div class="mt-12 text-h6 text-grey-darken-3 d-flex">
                     <i class="voyager-bar-chart d-flex align-center mr-2" />
-                    <span>Grafik Transaksi</span>
+                    <span>Grafik Jumlah Transaksi</span>
                 </div>
             </v-col>
 
-            <v-col cols="12">
+            <v-col v-if="chartData.labels.length"
+                   cols="12">
+
                 <v-sheet elevation="3"
                          class="pa-10"
                          rounded="lg">
+
                     <bar :data="chartData"
                          :options="chartOptions" />
                 </v-sheet>
@@ -81,23 +85,40 @@ export default {
         },
 
         chartData: {
-            labels: ['January', 'February', 'March'],
-            datasets: [{ data: [40, 20, 12] }]
+            labels: [],
+            datasets: [{
+                backgroundColor: "#5f4342",
+                data: [],
+            }],
         },
 
         chartOptions: {
             responsive: true,
-        }
+        },
     }),
 
     methods: {
-        getTopBarData() {
-            const { data } = this.axios().get('/api/dashboard/topbar')
-            console.log(data);
-        }
+
+        async getTopBarData() {
+            const { data } = await this.axios().get('/api/dashboard/topbar')
+            this.topbarData = data.data
+        },
+
+        async getChartData() {
+            const { data } = await this.axios().get('/api/dashboard/chart')
+            const chartData = data.data
+
+            for (const monthName in chartData) {
+                console.log(chartData[monthName]);
+                this.chartData.labels.push(monthName)
+                this.chartData.datasets[0].data.push(chartData[monthName])
+            }
+        },
+
     },
 
     created() {
+        this.getChartData()
         this.getTopBarData()
     }
 }

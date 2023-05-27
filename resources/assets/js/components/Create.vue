@@ -309,13 +309,17 @@ export default {
         backToBrowsePage() {
             const url = new URL(location)
             location.href = `/${url.pathname.split('/').find(path => path)}`
-        }
+        },
+
+        initPage() {
+            this.getListBarangAvailable()
+            this.getListPelangganAvailable()
+        },
 
     },
 
     created() {
-        this.getListBarangAvailable()
-        this.getListPelangganAvailable()
+        this.initPage()
     }
 }
 </script>
