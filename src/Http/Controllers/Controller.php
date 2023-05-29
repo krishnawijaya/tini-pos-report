@@ -35,8 +35,13 @@ class Controller extends BaseController
 
     public function showReport(Request $request)
     {
-        $isProhibited = Gate::denies("browse_{$this->getModelName(true)}");
+        $modelAbility = $this->getModelName(true);
+        $isProhibited = Gate::denies("browse_$modelAbility");
+
         if ($isProhibited) return abort(403);
+
+        $this->viewBaseArguments["createAbility"] = Gate::allows("create_$modelAbility");
+        $this->viewBaseArguments["readAbility"] = Gate::allows("read_$modelAbility");
 
         return view("dodiukirreport::$this->reportView", $this->viewBaseArguments);
     }

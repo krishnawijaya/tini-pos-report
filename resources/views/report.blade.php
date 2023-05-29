@@ -6,6 +6,7 @@
 {{ "Laporan " . $modelName }}
 @endsection
 
+@if($createAbility)
 @section("vue_header_action")
 
 <a href="{{ route('dodiukirreport.' . strtolower($modelName) . '.create') }}"
@@ -16,7 +17,9 @@
 </a>
 
 @endsection
+@endif
 
 @section("vue_content")
-<report model-name="{{ $modelName }}" />
+<report model-name="{{ $modelName }}"
+        :read-ability="{{ $readAbility ? 'true' : 'false' }}" />
 @endsection

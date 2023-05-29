@@ -28,7 +28,9 @@
                 <v-data-table-virtual class="elevation-3 rounded"
                                       :headers="headers"
                                       :items="items">
-                    <template #item.actions="{ item }">
+
+                    <template v-if="readAbility"
+                              #item.actions="{ item }">
 
                         <v-btn @click="openReadPage(item)"
                                color="yellow-darken-4"
@@ -52,6 +54,7 @@ export default {
 
     props: {
         modelName: String,
+        readAbility: Boolean,
     },
 
     data: () => ({
@@ -62,23 +65,26 @@ export default {
 
     computed: {
         headers() {
-            const header = [
+            const headers = [
                 { title: 'No.', key: 'item_no', align: 'center', sortable: false },
                 { title: 'Daftar Barang', key: 'barang', sortable: false },
                 { title: 'Total Jumlah', key: `total_${this.getModelName()}`, align: 'end' },
                 { title: 'Total Harga', key: `total_harga_${this.getModelName()}`, align: 'end' },
                 { title: 'Tanggal', key: `tanggal_${this.getModelName()}`, align: 'center', sortable: false },
-                { title: '', key: 'actions', align: 'center', sortable: false },
             ]
 
+            if (this.readAbility) {
+                headers.push({ title: '', key: 'actions', align: 'center', sortable: false })
+            }
+
             if (this.getModelName() == 'jual') {
-                header.splice(1, 0,
+                headers.splice(1, 0,
                     { title: 'Kasir', key: 'kasir' },
                     { title: 'Pelanggan', key: 'pelanggan' },
                 )
             }
 
-            return header
+            return headers
         }
     },
 
