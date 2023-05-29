@@ -2,11 +2,16 @@
 
 Voyager::routes();
 
-Route::group(['as' => 'dodiukirreport.', 'namespace' => 'Krishnawijaya\DodiUkirReport\Http\Controllers'], function () {
+Route::group(['as' => 'dodiukirreport.', 'namespace' => 'Krishnawijaya\DodiUkirReport\Http\Controllers', 'middleware' => 'admin.user'], function () {
     Route::get('/logout', 'VoyagerController@logout');
     Route::get('/dashboard', 'DashboardController@show')->name('dashboard');
+
     Route::get('/api/dashboard/topbar', 'DashboardController@getTopBarData')->name('api.dashboard.topbar');
     Route::get('/api/dashboard/chart', 'DashboardController@getChartData')->name('api.dashboard.chart');
+
+    Route::redirect('/pembelian/nota', '/pembelian', 301);
+    Route::redirect('/persediaan/nota', '/persediaan', 301);
+    Route::redirect('/penjualan/nota', '/penjualan', 301);
 
     Route::get('/pembelian/nota/{id}', 'PembelianController@showDetails')->name('pembelian.details');
     Route::get('/persediaan/nota/{id}', 'PersediaanController@showDetails')->name('persediaan.details');
@@ -17,6 +22,7 @@ Route::group(['as' => 'dodiukirreport.', 'namespace' => 'Krishnawijaya\DodiUkirR
     Route::get('/penjualan', 'PenjualanController@showReport')->name('penjualan.report');
 
     Route::get('/pembelian/create', 'PembelianController@create')->name('pembelian.create');
+    Route::get('/persediaan/create', 'PersediaanController@create')->name('persediaan.create');
     Route::get('/penjualan/create', 'PenjualanController@create')->name('penjualan.create');
 
     Route::group(['prefix' => 'api', 'namespace' => 'Api', 'as' => 'api.'], function () {
@@ -32,6 +38,7 @@ Route::group(['as' => 'dodiukirreport.', 'namespace' => 'Krishnawijaya\DodiUkirR
         Route::get('/penjualan/{id}', 'PenjualanController@show')->name('penjualan.show');
 
         Route::post('/pembelian', 'PembelianController@create')->name('pembelian.create');
+        Route::post('/persediaan', 'PersediaanController@create')->name('persediaan.create');
         Route::post('/penjualan', 'PenjualanController@create')->name('penjualan.create');
     });
 });

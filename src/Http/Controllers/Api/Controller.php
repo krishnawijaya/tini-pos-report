@@ -6,41 +6,20 @@ use Carbon\Carbon;
 use App\Models\Barang;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Model;
-use Krishnawijaya\DodiUkirReport\Models\Persediaan;
-use Illuminate\Routing\Controller as BaseController;
-use Krishnawijaya\DodiUkirReport\Helpers\ResponseFormatter;
 use Krishnawijaya\DodiUkirReport\Helpers\Toast;
+use Krishnawijaya\DodiUkirReport\Helpers\ResponseFormatter;
+use Krishnawijaya\DodiUkirReport\Http\Controllers\Base\Controller as BaseController;
 
 class Controller extends BaseController
 {
-    public Model $model;
     protected Model $newRecord;
     protected Collection $listBarang;
 
     public function __construct(Model $model)
     {
-        $this->model = $model;
-    }
-
-    public function getModelName($forceLowerCase = false, $abbreviation = false)
-    {
-        $modelName = class_basename($this->model);
-
-        if ($forceLowerCase) $modelName = strtolower($modelName);
-        if ($abbreviation && strtolower($modelName) == "penjualan") $modelName = "jual";
-
-        return $modelName;
-    }
-
-    public function getModelIcon()
-    {
-        return $this->model::ICON;
-    }
-
-    public function queryBuilder()
-    {
-        return $this->model::query();
+        parent::__construct($model);
     }
 
     public function index(Request $request)
@@ -51,7 +30,10 @@ class Controller extends BaseController
         $query = $this->queryBuilder()->with('barang');
 
         if ($startDate && $endDate) {
-            $query->whereBetween('created_at', [new Carbon($startDate), new Carbon($endDate)]);
+            $startDate = new Carbon($startDate);
+            $endDate = new Carbon($endDate);
+
+            $query->whereBetween('created_at', [$startDate->startOfDay(), $endDate->endOfDay()]);
         }
 
         $data = $query->latest()->get();
@@ -75,6 +57,7 @@ class Controller extends BaseController
             $totalJumlah = 0;
 
             $listBarang = collect($request->input('listBarang', []));
+            if ($listBarang->isEmpty()) throw new \Exception("Mohon setidaknya tambahkan 1 barang");
 
             $listBarang->each(function ($barangData) use (&$totalJumlah, &$totalHarga) {
 
@@ -85,7 +68,7 @@ class Controller extends BaseController
                 $jumlah = (int) $barangData->get('jumlah', 0);
 
                 if ($this->getModelName() == 'Penjualan') {
-                    if ($barang->stok < $jumlah) throw new \Exception("Stok Barang Tidak Cukup");
+                    if ($barang->stok < $jumlah) throw new \Exception("Stok barang ($barang->nama_barang) tidak cukup");
 
                     $harga = $barang->harga;
                 }
@@ -106,7 +89,7 @@ class Controller extends BaseController
                 // TODO: Change database design, this logic will causing bug.
                 $idPelanggan = $request->input('pelanggan')['id_pelanggan'] ?? 0;
 
-                $newRecordData->put("id_user", auth()->user()->id);
+                $newRecordData->put("id_user", Auth::user()->id);
                 $newRecordData->put("id_pelanggan", $idPelanggan);
             }
 
@@ -114,7 +97,8 @@ class Controller extends BaseController
             $this->newRecord = $this->queryBuilder()->create($newRecordData->toArray());
             $this->makeTransactions();
 
-            Toast::success("{$this->getModelName()} berhasil dibuat!");
+            if (!Auth::user()->isKasir()) Toast::success("{$this->getModelName()} berhasil dibuat");
+
             return ResponseFormatter::success($this->newRecord);
         } catch (\Throwable $th) {
 
@@ -141,27 +125,6 @@ class Controller extends BaseController
             elseif ($actionType == "Penjualan") $barang->stok -= (int) $barangData->get('jumlah', 0);
 
             $barang->save();
-
-            // Calculating Persediaan
-            $totalHargaPerBarang = $barang->stok * $barang->harga;
-
-            $persediaan = Persediaan::whereHas('barang', function ($barangQuery) use ($barangData) {
-                $barangQuery->where('detail_persediaan.id_barang', $barangData->get('id_barang'));
-            })->first();
-
-            if (!$persediaan) $persediaan = new Persediaan();
-
-            $persediaan->tanggal_persediaan = now();
-            $persediaan->total_persediaan = $barang->stok;
-            $persediaan->total_harga_persediaan = $totalHargaPerBarang;
-
-            $persediaan->save();
-            $persediaan->barang()
-                ->attach($barang->id_barang, [
-                    'jenis' => $actionType,
-                    'harga' => $barang->harga,
-                    'jumlah' => (int) $barangData->get('jumlah', 0),
-                ]);
         });
     }
 }

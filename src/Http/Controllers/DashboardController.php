@@ -39,8 +39,8 @@ class DashboardController extends BaseController
     public function getChartData(Request $request)
     {
         $response = [];
-        $endDate = now();
-        $startDate = $endDate->copy()->subMonths(3)->startOfMonth();
+        $endDate = now()->endOfMonth();
+        $startDate = $endDate->copy()->subMonths(2)->startOfMonth();
 
         $penjualan = Penjualan::whereBetween('created_at', [$startDate, $endDate])->get();
 

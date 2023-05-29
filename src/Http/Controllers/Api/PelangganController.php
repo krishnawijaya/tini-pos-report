@@ -16,16 +16,7 @@ class PelangganController extends Controller
 
     public function index(Request $request)
     {
-        $startDate = $request->input('startDate');
-        $endDate = $request->input('endDate');
-
-        $query = $this->queryBuilder();
-
-        if ($startDate && $endDate) {
-            $query->whereBetween('created_at', [new Carbon($startDate), new Carbon($endDate)]);
-        }
-
-        $data = $query->latest()->get();
+        $data = $this->queryBuilder()->latest()->get();
         return ResponseFormatter::success($data);
     }
 

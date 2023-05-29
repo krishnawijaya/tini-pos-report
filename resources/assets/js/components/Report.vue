@@ -2,19 +2,21 @@
     <v-container fluid>
         <v-row>
             <v-col>
-                <input class="w-100 bg-white px-5 py-3 rounded elevation-1"
+                <div class="text-overline">Dari Tanggal</div>
+                <input class="w-100 bg-white px-5 py-3 rounded elevation-3"
                        v-model="startDate"
                        type="date" />
             </v-col>
 
             <v-col>
-                <input class="w-100 bg-white px-5 py-3 rounded elevation-1"
+                <div class="text-overline">Sampai Tanggal</div>
+                <input class="w-100 bg-white px-5 py-3 rounded elevation-3"
                        v-model="endDate"
                        type="date" />
             </v-col>
 
             <v-col cols="1"
-                   class="d-flex justify-end align-center">
+                   class="d-flex justify-end align-end">
                 <v-btn color="blue-darken-4"
                        icon="mdi-magnify"
                        @click="getReport" />
@@ -23,7 +25,7 @@
 
         <v-row>
             <v-col>
-                <v-data-table-virtual class="elevation-1 rounded"
+                <v-data-table-virtual class="elevation-3 rounded"
                                       :headers="headers"
                                       :items="items">
                     <template #item.actions="{ item }">
@@ -62,6 +64,7 @@ export default {
         headers() {
             const header = [
                 { title: 'No.', key: 'item_no', align: 'center', sortable: false },
+                { title: 'Daftar Barang', key: 'barang', sortable: false },
                 { title: 'Total Jumlah', key: `total_${this.getModelName()}`, align: 'end' },
                 { title: 'Total Harga', key: `total_harga_${this.getModelName()}`, align: 'end' },
                 { title: 'Tanggal', key: `tanggal_${this.getModelName()}`, align: 'center', sortable: false },
@@ -101,6 +104,9 @@ export default {
                 this.items = data.data.map((item, index) => {
                     if (item.pelanggan) item.pelanggan = item.pelanggan.nama_pelanggan ?? ""
                     if (item.user) item.kasir = item.user.name ?? ""
+
+                    const listBarang = item.barang ?? []
+                    item.barang = [...new Set(listBarang.map(barang => barang.nama_barang).filter(namaBarang => namaBarang))].join(', ')
 
                     item[`total_${this.getModelName()}`] = this.unitFormat(item[`total_${this.getModelName()}`])
                     item[`total_harga_${this.getModelName()}`] = this.currencyFormat(item[`total_harga_${this.getModelName()}`])

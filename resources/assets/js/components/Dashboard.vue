@@ -10,7 +10,8 @@
         </v-row>
 
         <v-row>
-            <v-col>
+            <v-col cols="12"
+                   sm="4">
                 <v-card title="Pendapatan Hari Ini">
                     <template #text>
                         <div class="text-h4 text-right">
@@ -20,7 +21,8 @@
                 </v-card>
             </v-col>
 
-            <v-col>
+            <v-col cols="12"
+                   sm="4">
                 <v-card title="Jumlah Transaksi Hari Ini">
                     <template #text>
                         <div class="text-h4 text-right">
@@ -31,7 +33,8 @@
                 </v-card>
             </v-col>
 
-            <v-col>
+            <v-col cols="12"
+                   sm="4">
                 <v-card title="Laba Rugi Bulan Ini">
                     <template #text>
                         <div class="text-h4 text-right">
@@ -50,15 +53,17 @@
                 </div>
             </v-col>
 
-            <v-col v-if="chartData.labels.length"
-                   cols="12">
+            <v-col cols="12">
 
-                <v-sheet elevation="3"
-                         class="pa-10"
+                <v-sheet class="pa-10 elevation-3"
                          rounded="lg">
 
-                    <bar :data="chartData"
+                    <bar v-if="chartData.labels.length"
+                         :data="chartData"
                          :options="chartOptions" />
+
+                    <div v-else
+                         class="text-h5">Tidak ada data</div>
                 </v-sheet>
             </v-col>
         </v-row>

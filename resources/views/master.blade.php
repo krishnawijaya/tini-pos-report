@@ -6,6 +6,7 @@
 
 @endsection
 
+@if (!Request::get('print'))
 @hasSection("vue_icon")
 
 @section("page_header")
@@ -18,6 +19,7 @@
 </h1>
 @endsection
 
+@endif
 @endif
 
 @section("content")

@@ -6,7 +6,6 @@
 {{ "Laporan " . $modelName }}
 @endsection
 
-@if (strtolower($modelName) != "persediaan")
 @section("vue_header_action")
 
 <a href="{{ route('dodiukirreport.' . strtolower($modelName) . '.create') }}"
@@ -17,7 +16,6 @@
 </a>
 
 @endsection
-@endif
 
 @section("vue_content")
 <report model-name="{{ $modelName }}" />

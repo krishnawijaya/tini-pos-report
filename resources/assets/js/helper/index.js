@@ -38,17 +38,15 @@ class Helper {
         return value
     }
 
-    static unitFormat(value) {
-        let text = ' unit'
-        if (value) {
-            if (Number(value) > 1) {
-                text = ' units'
-            }
-        } else {
-            value = 0
+    static unitFormat(value, unitText) {
+        if (!value) value = 0
+
+        if (!unitText) {
+            unitText = 'unit'
+            if (Number(value) > 1) unitText += 's'
         }
 
-        return value + text
+        return `${value} ${unitText}`
     }
 
     static getMixins() {

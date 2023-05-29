@@ -4,45 +4,15 @@ namespace Krishnawijaya\DodiUkirReport\Http\Controllers;
 
 use App\Models\Barang;
 use Illuminate\Http\Request;
-use Krishnawijaya\DodiUkirReport\Models\Persediaan;
+use Krishnawijaya\DodiUkirReport\Helpers\Toast;
 use TCG\Voyager\Http\Controllers\VoyagerBaseController as BaseVoyagerBaseController;
 
 class VoyagerBaseController extends BaseVoyagerBaseController
 {
     public function store(Request $request)
     {
-        if ($this->getSlug($request) != "barang") return parent::store($request);
-
-        $request->request->add(["_tagging" => true]);
-        $result = parent::store($request);
-
-
-        $barang = Barang::find($result->getData()->data->id_barang ?? 0);
-        if ($barang) {
-            $persediaan = Persediaan::create([
-                "tanggal_persediaan" => now(),
-                "total_persediaan" => $barang->stok,
-                "total_harga_persediaan" => $barang->stok * $barang->harga,
-            ]);
-
-            $persediaan->barang()
-                ->attach($barang->id_barang, [
-                    'jenis' => "Pembuatan",
-                    'harga' => $barang->harga,
-                    'jumlah' => (int) $barang->stok,
-                ]);
-        }
-
-        if ($barang && auth()->user()->can('browse', $barang)) {
-            $redirect = redirect()->route("voyager.barang.index");
-        } else {
-            $redirect = redirect()->back();
-        }
-
-        return $redirect->with([
-            'message'    => __('voyager::generic.successfully_added_new') . " Barang",
-            'alert-type' => 'success',
-        ]);
+        if ($this->getSlug($request) == "barang") $request->request->add(["stok" => 0]);
+        return parent::store($request);
     }
 
     public function destroy(Request $request, $id)
@@ -56,11 +26,20 @@ class VoyagerBaseController extends BaseVoyagerBaseController
             foreach ($ids as $id) {
                 $barang = Barang::find($id);
 
-                if ($barang) {
-                    $persediaanIds = $barang->persediaan()->pluck('detail_persediaan.id_persediaan')->toArray();
 
-                    $barang->persediaan()->detach();
-                    Persediaan::whereIn('id_persediaan', $persediaanIds)->delete();
+                if ($barang) {
+                    $relations = collect();
+
+                    if ($barang->pembelian()->exists()) $relations->push("Pembelian");
+                    if ($barang->persediaan()->exists()) $relations->push("Persediaan");
+                    if ($barang->penjualan()->exists()) $relations->push("Penjualan");
+
+                    if ($relations->count()) {
+                        $relationsText = $relations->join(", ");
+
+                        Toast::warning("Tidak dapat menghapus barang ($barang->nama_barang) karena telah tercatat di $relationsText.");
+                        return redirect()->back();
+                    }
                 }
             }
 

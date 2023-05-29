@@ -7,6 +7,5 @@
 @endsection
 
 @section("vue_content")
-<create model-name="{{ $modelName }}"
-        role-name="{{ $roleName }}" />
+<persediaan-create model-name="{{ $modelName }}" />
 @endsection

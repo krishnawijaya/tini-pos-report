@@ -35,22 +35,20 @@
             <v-col v-if="modelName.toLowerCase() == 'pembelian'"
                    :sm="modelName.toLowerCase() == 'pembelian' ? 3 : 4"
                    cols="12">
-                <v-text-field v-model="selectedBarang.harga"
+                <v-text-field v-model="purchasePrice"
                               :hint="`Harga jual saat ini: ${currencyFormat(selectedBarang.harga)}`"
-                              variant="solo"
-                              label="Harga Beli">
-                </v-text-field>
+                              label="Harga Beli"
+                              variant="solo" />
 
             </v-col>
 
             <v-col :sm="modelName.toLowerCase() == 'pembelian' ? 2 : 4"
                    cols="12">
                 <v-text-field v-model="selectedBarang.jumlah"
-                              :hint="`Stok saat ini: ${unitFormat(selectedBarang.stok)}`"
+                              :hint="`Stok saat ini: ${unitFormat(selectedBarang.stok, selectedBarang.ukuran)}`"
                               @keyup.enter="addBarang"
                               variant="solo"
-                              label="Jumlah">
-                </v-text-field>
+                              label="Jumlah" />
 
             </v-col>
 
@@ -73,41 +71,42 @@
             </v-col>
         </v-row>
 
-        <v-row class="px-3">
-            <v-data-table-virtual class="elevation-1 rounded-lg"
-                                  :headers="headers"
-                                  :items="listBarangInCart">
-                <template #item.numbering="{ index }">
-                    {{ index + 1 }}
-                </template>
+        <v-row>
+            <v-col>
+                <v-data-table-virtual class="elevation-3 rounded-lg"
+                                      :headers="headers"
+                                      :items="listBarangInCart">
+                    <template #item.numbering="{ index }">
+                        {{ index + 1 }}
+                    </template>
 
-                <template #item.harga="{ item }">
-                    {{ currencyFormat(item.value.harga) }}
-                </template>
+                    <template #item.harga="{ item }">
+                        {{ currencyFormat(item.value.harga) }}
+                    </template>
 
-                <template #item.jumlah="{ item }">
-                    {{ unitFormat(item.value.jumlah) }}
-                </template>
+                    <template #item.jumlah="{ item }">
+                        {{ unitFormat(item.value.jumlah, item.value.ukuran) }}
+                    </template>
 
-                <template #item.subtotal="{ item }">
-                    {{ countSubtotal(item) }}
-                </template>
+                    <template #item.subtotal="{ item }">
+                        {{ countSubtotal(item) }}
+                    </template>
 
-                <template #item.action="{ item }">
-                    <v-btn @click="removeBarangFromCart(item)"
-                           icon="mdi-delete-empty"
-                           color="red-darken-4"
-                           variant="tonal"
-                           size="small" />
-                </template>
-            </v-data-table-virtual>
+                    <template #item.action="{ item }">
+                        <v-btn @click="removeBarangFromCart(item)"
+                               icon="mdi-delete-empty"
+                               color="red-darken-4"
+                               variant="tonal"
+                               size="small" />
+                    </template>
+                </v-data-table-virtual>
+            </v-col>
         </v-row>
 
         <v-row class="pt-4">
             <v-col cols="12"
                    sm="8">
-                <v-sheet elevation="3"
-                         class="pa-5"
+                <v-sheet class="pa-5 elevation-3"
                          rounded="lg">
 
                     <v-row>
@@ -128,7 +127,6 @@
                     </v-row>
 
                     <v-divider class="border-opacity-50"
-                               color="warning"
                                thickness="2" />
 
                     <v-row>
@@ -186,10 +184,25 @@ export default {
     mixins: [mixin],
 
     props: {
+        roleName: String,
         modelName: String,
     },
 
     data: () => ({
+        selectedBarangOnSelector: undefined,
+        selectedPelanggan: undefined,
+        listPelangganAvailable: [],
+        listBarangAvailable: [],
+        listBarangInCart: [],
+        purchasePrice: "",
+
+        selectedBarang: {
+            uid: "",
+            stok: 0,
+            harga: 0,
+            jumlah: "",
+        },
+
         headers: [
             { title: 'No.', key: 'numbering', align: 'center', sortable: false },
             { title: 'Barang', key: 'nama_barang', align: 'center', sortable: false },
@@ -198,18 +211,6 @@ export default {
             { title: 'Subtotal', key: 'subtotal', align: 'center', sortable: false },
             { title: '', key: 'action', align: 'center', sortable: false },
         ],
-
-        selectedPelanggan: undefined,
-        selectedBarangOnSelector: undefined,
-        listPelangganAvailable: [],
-        listBarangAvailable: [],
-        listBarangInCart: [],
-        selectedBarang: {
-            uid: "",
-            stok: 0,
-            harga: 0,
-            jumlah: "",
-        }
     }),
 
     computed: {
@@ -233,7 +234,9 @@ export default {
         },
 
         countSelectedBarangSubtotal() {
-            return this.currencyFormat((Number(this.selectedBarang.harga) * Number(this.selectedBarang.jumlah)) ?? 0)
+            const harga = this.modelName.toLowerCase() == 'pembelian' ? this.purchasePrice : this.selectedBarang.harga
+
+            return this.currencyFormat((Number(harga) * Number(this.selectedBarang.jumlah)) ?? 0)
         },
 
     },
@@ -264,9 +267,10 @@ export default {
                 !this.selectedBarang.jumlah ||
                 this.selectedBarang.jumlah < 1) return
 
-            const barang = this.selectedBarang
-            this.listBarangInCart.push(this.deepCopy(barang))
+            const barang = this.deepCopy(this.selectedBarang)
+            if (this.modelName.toLowerCase() == 'pembelian') barang.harga = this.purchasePrice
 
+            this.listBarangInCart.push(barang)
             this.emptySelectedBarang()
         },
 
@@ -278,6 +282,8 @@ export default {
         },
 
         emptySelectedBarang() {
+            this.purchasePrice = ""
+
             this.selectedBarangOnSelector = undefined
             this.selectedBarang = {
                 uid: "",
@@ -298,8 +304,16 @@ export default {
             }
 
             try {
-                await this.axios().post(`/api/${this.modelName.toLowerCase()}`, payload)
-                this.backToBrowsePage()
+                const { data } = await this.axios().post(`/api/${this.modelName.toLowerCase()}`, payload)
+
+                if (this.modelName.toLowerCase() == "penjualan" && this.roleName == "kasir") {
+                    const idPenjualan = data?.data?.id_penjualan
+                    open(`/penjualan/nota/${idPenjualan}?print=true`, '_blank')
+
+                    location.reload()
+                } else {
+                    this.backToBrowsePage()
+                }
 
             } catch (error) {
                 location.reload()

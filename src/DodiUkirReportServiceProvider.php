@@ -2,10 +2,11 @@
 
 namespace Krishnawijaya\DodiUkirReport;
 
-use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Foundation\AliasLoader;
-use Krishnawijaya\DodiUkirReport\Seed;
 use Krishnawijaya\DodiUkirReport\Facades\DodiUkirReportFacade;
+use Krishnawijaya\DodiUkirReport\Database\Seeders\PermissionSeeder;
+use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 
 class DodiUkirReportServiceProvider extends ServiceProvider
 {
@@ -24,6 +25,8 @@ class DodiUkirReportServiceProvider extends ServiceProvider
 
     public function boot()
     {
+        $this->registerNewPermissions();
+
         $this->loadMigrationsFrom(realpath(__DIR__ . '../migrations'));
         $this->loadViewsFrom(dirname(__DIR__) . '/resources/views', 'dodiukirreport');
     }
@@ -39,9 +42,6 @@ class DodiUkirReportServiceProvider extends ServiceProvider
                 "{$publishablePath}/css/" => public_path("{$destinationPath}/css/"),
                 "{$publishablePath}/fonts/" => public_path("fonts"),
             ],
-            'seeds' => [
-                "{$publishablePath}/database/seeds/" => database_path(Seed::getFolderName()),
-            ],
         ];
 
         foreach ($publishable as $group => $paths) {
@@ -52,5 +52,16 @@ class DodiUkirReportServiceProvider extends ServiceProvider
     private function registerConsoleCommands()
     {
         $this->commands(Commands\AdminCommand::class);
+    }
+
+    public function registerNewPermissions()
+    {
+        foreach (PermissionSeeder::PERMISSIONS as $permissions) {
+            foreach ($permissions as $key) {
+                Gate::define($key, function ($user) use ($key) {
+                    return $user->hasPermission($key);
+                });
+            }
+        }
     }
 }

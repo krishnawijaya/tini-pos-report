@@ -1,33 +1,35 @@
 <template>
-    <v-container fluid>
-        <v-row class="px-3">
-            <v-data-table-virtual class="elevation-3 rounded-lg"
-                                  :headers="headers"
-                                  :items="listBarang">
-                <template #item.numbering="{ index }">
-                    {{ index + 1 }}
-                </template>
+    <v-container v-if="!isPrintPage"
+                 fluid>
+        <v-row>
+            <v-col>
+                <v-data-table-virtual class="elevation-3 rounded-lg"
+                                      :headers="headers"
+                                      :items="listBarang">
+                    <template #item.numbering="{ index }">
+                        {{ index + 1 }}
+                    </template>
 
-                <template #item.harga="{ item }">
-                    {{ currencyFormat(item.value?.pivot?.harga) }}
-                </template>
+                    <template #item.harga="{ item }">
+                        {{ currencyFormat(item.value?.pivot?.harga) }}
+                    </template>
 
-                <template #item.jumlah="{ item }">
-                    {{ unitFormat(item?.value?.pivot?.jumlah) }}
-                </template>
+                    <template #item.jumlah="{ item }">
+                        {{ unitFormat(item.value?.pivot?.jumlah, item?.value?.ukuran) }}
+                    </template>
 
-                <template #item.subtotal="{ item }">
-                    {{ countSubtotal(item) }}
-                </template>
-            </v-data-table-virtual>
+                    <template #item.subtotal="{ item }">
+                        {{ countSubtotal(item) }}
+                    </template>
+                </v-data-table-virtual>
+            </v-col>
         </v-row>
 
         <v-row v-if="modelName.toLowerCase() != 'persediaan'"
                class="pt-4">
             <v-col cols="12"
                    sm="8">
-                <v-sheet elevation="3"
-                         class="pa-5"
+                <v-sheet class="pa-5 elevation-3"
                          rounded="lg">
 
                     <v-row>
@@ -48,7 +50,6 @@
                     </v-row>
 
                     <v-divider class="border-opacity-50"
-                               color="warning"
                                thickness="2" />
 
                     <v-row>
@@ -73,8 +74,7 @@
             <v-col v-if="modelName.toLowerCase() == 'penjualan'"
                    cols="12"
                    sm="4">
-                <v-sheet elevation="3"
-                         class="pa-5"
+                <v-sheet class="pa-5 elevation-3"
                          rounded="lg">
 
                     <v-row>
@@ -94,7 +94,6 @@
                     </v-row>
 
                     <v-divider class="border-opacity-50"
-                               color="warning"
                                thickness="2" />
 
                     <v-row>
@@ -118,14 +117,15 @@
         </v-row>
     </v-container>
 
-    <v-dialog transition="dialog-bottom-transition"
+    <v-dialog v-else
+              transition="dialog-bottom-transition"
               v-model="isPrintPage"
               :z-index="9999"
               :scrim="false"
+              persistent
               fullscreen>
         <v-card>
-            <v-toolbar color="#5f4342"
-                       @click="isPrintPage = false">
+            <v-toolbar color="#5f4342">
                 <v-spacer />
 
                 <v-toolbar-title>
@@ -138,35 +138,36 @@
             </v-toolbar>
 
             <v-container class="pt-12">
-                <v-row class="px-3">
-                    <v-data-table-virtual class="elevation-5 rounded-lg"
-                                          :headers="headers"
-                                          :items="listBarang">
-                        <template #item.numbering="{ index }">
-                            {{ index + 1 }}
-                        </template>
+                <v-row>
+                    <v-col>
+                        <v-data-table-virtual class="elevation-3 rounded-lg"
+                                              :headers="headers"
+                                              :items="listBarang">
+                            <template #item.numbering="{ index }">
+                                {{ index + 1 }}
+                            </template>
 
-                        <template #item.harga="{ item }">
-                            {{ currencyFormat(item.value?.pivot?.harga) }}
-                        </template>
+                            <template #item.harga="{ item }">
+                                {{ currencyFormat(item.value?.pivot?.harga) }}
+                            </template>
 
-                        <template #item.jumlah="{ item }">
-                            {{ unitFormat(item?.value?.pivot?.jumlah) }}
-                        </template>
+                            <template #item.jumlah="{ item }">
+                                {{ unitFormat(item.value?.pivot?.jumlah, item.value?.ukuran) }}
+                            </template>
 
-                        <template #item.subtotal="{ item }">
-                            {{ countSubtotal(item) }}
-                        </template>
+                            <template #item.subtotal="{ item }">
+                                {{ countSubtotal(item) }}
+                            </template>
 
-                    </v-data-table-virtual>
+                        </v-data-table-virtual>
+                    </v-col>
                 </v-row>
 
                 <v-row v-if="modelName.toLowerCase() != 'persediaan'"
                        class="pt-4">
                     <v-col cols="12"
                            sm="8">
-                        <v-sheet elevation="3"
-                                 class="pa-5"
+                        <v-sheet class="pa-5 elevation-3"
                                  rounded="lg">
 
                             <v-row>
@@ -187,7 +188,6 @@
                             </v-row>
 
                             <v-divider class="border-opacity-50"
-                                       color="warning"
                                        thickness="2" />
 
                             <v-row>
@@ -212,8 +212,7 @@
                     <v-col v-if="modelName.toLowerCase() == 'penjualan'"
                            cols="12"
                            sm="4">
-                        <v-sheet elevation="3"
-                                 class="pa-5"
+                        <v-sheet class="pa-5 elevation-3"
                                  rounded="lg">
 
                             <v-row>
@@ -233,7 +232,6 @@
                             </v-row>
 
                             <v-divider class="border-opacity-50"
-                                       color="warning"
                                        thickness="2" />
 
                             <v-row>
@@ -326,25 +324,24 @@ export default {
 
             const { data } = await this.axios().get(`/api/${this.modelName.toLowerCase()}/${id}`)
 
-            this.listBarang = data.data.barang
+            this.listBarang = data.data?.barang ?? []
             this.pelanggan = data.data?.pelanggan?.nama_pelanggan ?? ""
-            this.kasir = data.data?.user.name ?? ""
+            this.kasir = data.data?.user?.name ?? ""
         },
 
         countSubtotal({ value }) {
             return this.currencyFormat((Number(value?.pivot?.harga) * Number(value?.pivot?.jumlah)) ?? 0)
         },
 
-        backToBrowsePage() {
-            const url = new URL(location)
-            location.href = `/${url.pathname.split('/').find(path => path)}`
-        },
-
         initPage() {
-            this.getItemDetails()
-
             const url = new URL(location)
             this.isPrintPage = url.searchParams.get("print")
+
+            this.getItemDetails().then(() => {
+                setTimeout(() => {
+                    if (this.isPrintPage) print()
+                }, 100);
+            })
         },
 
     },

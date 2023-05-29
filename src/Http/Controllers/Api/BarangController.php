@@ -16,22 +16,13 @@ class BarangController extends Controller
 
     public function index(Request $request)
     {
-        $startDate = $request->input('startDate');
-        $endDate = $request->input('endDate');
-
-        $query = $this->queryBuilder();
-
-        if ($startDate && $endDate) {
-            $query->whereBetween('created_at', [new Carbon($startDate), new Carbon($endDate)]);
-        }
-
-        $data = $query->latest()->get();
+        $data = $this->queryBuilder()->with('kategori')->latest()->get();
         return ResponseFormatter::success($data);
     }
 
     public function show(Request $request, $id)
     {
-        $data = $this->queryBuilder()->findOrFail($id);
+        $data = $this->queryBuilder()->with('kategori')->findOrFail($id);
         return ResponseFormatter::success($data);
     }
 }
