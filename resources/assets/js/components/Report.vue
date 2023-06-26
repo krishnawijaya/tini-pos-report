@@ -8,7 +8,7 @@
                        type="date" />
             </v-col>
 
-            <v-col cols="12" sm="6">
+            <v-col cols="12" sm="5">
                 <div class="text-overline">Sampai Tanggal</div>
                 <input class="w-100 bg-white px-5 py-3 rounded elevation-3"
                        v-model="endDate"
