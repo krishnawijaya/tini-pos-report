@@ -67,7 +67,7 @@
 
                 <v-text-field v-model="selectedFinishedGoods.jumlah"
                               :hint="`Stok saat ini: ${unitFormat(selectedFinishedGoods.stok, selectedFinishedGoods.ukuran)}`"
-                              label="Jumlah yang dibutuhkan"
+                              label="Jumlah yang dihasilkan"
                               @keyup.enter="addAction('FinishedGoods')"
                               variant="solo">
 

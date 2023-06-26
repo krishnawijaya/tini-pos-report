@@ -1,14 +1,14 @@
 <template>
     <v-container fluid>
         <v-row>
-            <v-col>
+            <v-col cols="12" sm="6">
                 <div class="text-overline">Dari Tanggal</div>
                 <input class="w-100 bg-white px-5 py-3 rounded elevation-3"
                        v-model="startDate"
                        type="date" />
             </v-col>
 
-            <v-col>
+            <v-col cols="12" sm="6">
                 <div class="text-overline">Sampai Tanggal</div>
                 <input class="w-100 bg-white px-5 py-3 rounded elevation-3"
                        v-model="endDate"
