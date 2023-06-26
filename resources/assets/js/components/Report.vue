@@ -15,8 +15,9 @@
                        type="date" />
             </v-col>
 
-            <v-col cols="1"
-                   class="d-flex justify-end align-end">
+            <v-col class="d-flex justify-end align-end"
+                   cols="12"
+                   sm="1">
                 <v-btn color="blue-darken-4"
                        icon="mdi-magnify"
                        @click="getReport" />
