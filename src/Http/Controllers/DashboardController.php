@@ -40,9 +40,9 @@ class DashboardController extends BaseController
     {
         $response = [];
         $endDate = now()->endOfMonth();
-        $startDate = $endDate->copy()->subMonths(11)->startOfMonth();
+        $startDate = $endDate->copy()->subMonths(5)->startOfMonth();
 
-        $penjualan = Penjualan::whereBetween('created_at', [$startDate, $endDate])->get();
+        $penjualan = Penjualan::whereBetween('created_at', [$startDate, $endDate])->orderBy('created_at', 'ASC')->get();
 
         $penjualan->each(function ($penjualan) use (&$response) {
             $monthName = Carbon::parse($penjualan->created_at)->format('F');
