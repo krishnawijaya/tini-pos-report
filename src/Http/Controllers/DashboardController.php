@@ -40,7 +40,7 @@ class DashboardController extends BaseController
     {
         $response = [];
         $endDate = now()->endOfMonth();
-        $startDate = $endDate->copy()->subMonths(2)->startOfMonth();
+        $startDate = $endDate->copy()->subMonths(11)->startOfMonth();
 
         $penjualan = Penjualan::whereBetween('created_at', [$startDate, $endDate])->get();
 
