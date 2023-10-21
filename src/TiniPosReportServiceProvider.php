@@ -1,22 +1,22 @@
 <?php
 
-namespace Krishnawijaya\DodiUkirReport;
+namespace KrishnaWijaya\TiniPosReport;
 
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Foundation\AliasLoader;
-use Krishnawijaya\DodiUkirReport\Facades\DodiUkirReportFacade;
-use Krishnawijaya\DodiUkirReport\Database\Seeders\PermissionSeeder;
+use KrishnaWijaya\TiniPosReport\Facades\TiniPosReportFacade;
+use KrishnaWijaya\TiniPosReport\Database\Seeders\PermissionSeeder;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 
-class DodiUkirReportServiceProvider extends ServiceProvider
+class TiniPosReportServiceProvider extends ServiceProvider
 {
     public function register()
     {
         $loader = AliasLoader::getInstance();
-        $loader->alias('DodiUkirReport', DodiUkirReportFacade::class);
+        $loader->alias('TiniPosReport', TiniPosReportFacade::class);
 
-        $this->app->singleton('dodiukirreport', function () {
-            return new DodiUkirReport();
+        $this->app->singleton('tiniposreport', function () {
+            return new TiniPosReport();
         });
 
         $this->registerConsoleCommands();
@@ -28,16 +28,16 @@ class DodiUkirReportServiceProvider extends ServiceProvider
         $this->registerNewPermissions();
 
         $this->loadMigrationsFrom(realpath(__DIR__ . '../migrations'));
-        $this->loadViewsFrom(dirname(__DIR__) . '/resources/views', 'dodiukirreport');
+        $this->loadViewsFrom(dirname(__DIR__) . '/resources/views', 'tiniposreport');
     }
 
     private function registerPublishableResources()
     {
         $publishablePath = dirname(__DIR__) . '/publishable';
-        $destinationPath = 'vendor/dodiukirreport';
+        $destinationPath = 'vendor/tiniposreport';
 
         $publishable = [
-            'dodiukirreport-assets' => [
+            'tiniposreport-assets' => [
                 "{$publishablePath}/js/" => public_path("{$destinationPath}/js/"),
                 "{$publishablePath}/css/" => public_path("{$destinationPath}/css/"),
                 "{$publishablePath}/fonts/" => public_path("fonts"),

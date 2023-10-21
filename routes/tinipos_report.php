@@ -2,7 +2,7 @@
 
 Voyager::routes();
 
-Route::group(['as' => 'dodiukirreport.', 'namespace' => 'Krishnawijaya\DodiUkirReport\Http\Controllers', 'middleware' => 'admin.user'], function () {
+Route::group(['as' => 'tiniposreport.', 'namespace' => 'KrishnaWijaya\TiniPosReport\Http\Controllers', 'middleware' => 'admin.user'], function () {
     Route::get('/logout', 'VoyagerController@logout');
     Route::get('/dashboard', 'DashboardController@show')->name('dashboard');
 

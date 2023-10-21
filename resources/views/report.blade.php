@@ -1,4 +1,4 @@
-@extends("dodiukirreport::master")
+@extends("tiniposreport::master")
 
 @section("vue_icon", $modelIcon)
 
@@ -9,7 +9,7 @@
 @if($createAbility)
 @section("vue_header_action")
 
-<a href="{{ route('dodiukirreport.' . strtolower($modelName) . '.create') }}"
+<a href="{{ route('tiniposreport.' . strtolower($modelName) . '.create') }}"
    class="btn btn-success btn-add-new">
 
     <i class="voyager-plus"></i>

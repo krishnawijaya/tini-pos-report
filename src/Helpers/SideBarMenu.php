@@ -1,8 +1,8 @@
 <?php
 
-namespace Krishnawijaya\DodiUkirReport\Helpers;
+namespace KrishnaWijaya\TiniPosReport\Helpers;
 
-use Krishnawijaya\DodiUkirReport\Models\Menu;
+use KrishnaWijaya\TiniPosReport\Models\Menu;
 
 class SideBarMenu
 {

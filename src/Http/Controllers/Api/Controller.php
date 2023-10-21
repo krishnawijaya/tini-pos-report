@@ -1,6 +1,6 @@
 <?php
 
-namespace Krishnawijaya\DodiUkirReport\Http\Controllers\Api;
+namespace KrishnaWijaya\TiniPosReport\Http\Controllers\Api;
 
 use Carbon\Carbon;
 use App\Models\Barang;
@@ -8,9 +8,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Model;
-use Krishnawijaya\DodiUkirReport\Helpers\Toast;
-use Krishnawijaya\DodiUkirReport\Helpers\ResponseFormatter;
-use Krishnawijaya\DodiUkirReport\Http\Controllers\Base\Controller as BaseController;
+use KrishnaWijaya\TiniPosReport\Helpers\Toast;
+use KrishnaWijaya\TiniPosReport\Helpers\ResponseFormatter;
+use KrishnaWijaya\TiniPosReport\Http\Controllers\Base\Controller as BaseController;
 
 class Controller extends BaseController
 {

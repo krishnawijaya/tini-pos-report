@@ -1,11 +1,11 @@
 <?php
 
-namespace Krishnawijaya\DodiUkirReport\Http\Controllers\Api;
+namespace KrishnaWijaya\TiniPosReport\Http\Controllers\Api;
 
 use Carbon\Carbon;
 use App\Models\Barang;
 use Illuminate\Http\Request;
-use Krishnawijaya\DodiUkirReport\Helpers\ResponseFormatter;
+use KrishnaWijaya\TiniPosReport\Helpers\ResponseFormatter;
 
 class BarangController extends Controller
 {

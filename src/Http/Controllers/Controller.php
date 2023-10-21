@@ -1,12 +1,12 @@
 <?php
 
-namespace Krishnawijaya\DodiUkirReport\Http\Controllers;
+namespace KrishnaWijaya\TiniPosReport\Http\Controllers;
 
 use Illuminate\Support\Facades\Request;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
-use Krishnawijaya\DodiUkirReport\Http\Controllers\Base\Controller as BaseController;
+use KrishnaWijaya\TiniPosReport\Http\Controllers\Base\Controller as BaseController;
 
 class Controller extends BaseController
 {
@@ -30,7 +30,7 @@ class Controller extends BaseController
         $isProhibited = Gate::denies("read_{$this->getModelName(true)}");
         if ($isProhibited) return abort(403);
 
-        return view("dodiukirreport::$this->detailsView", $this->viewBaseArguments);
+        return view("tiniposreport::$this->detailsView", $this->viewBaseArguments);
     }
 
     public function showReport(Request $request)
@@ -43,7 +43,7 @@ class Controller extends BaseController
         $this->viewBaseArguments["createAbility"] = Gate::allows("create_$modelAbility");
         $this->viewBaseArguments["readAbility"] = Gate::allows("read_$modelAbility");
 
-        return view("dodiukirreport::$this->reportView", $this->viewBaseArguments);
+        return view("tiniposreport::$this->reportView", $this->viewBaseArguments);
     }
 
     public function create(Request $request)
@@ -52,6 +52,6 @@ class Controller extends BaseController
         if ($isProhibited) return abort(403);
 
         $this->viewBaseArguments["roleName"] = Auth::user()->role->name;
-        return view("dodiukirreport::$this->createView", $this->viewBaseArguments);
+        return view("tiniposreport::$this->createView", $this->viewBaseArguments);
     }
 }

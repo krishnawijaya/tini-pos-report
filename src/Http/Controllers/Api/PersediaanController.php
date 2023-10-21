@@ -1,12 +1,12 @@
 <?php
 
-namespace Krishnawijaya\DodiUkirReport\Http\Controllers\Api;
+namespace KrishnaWijaya\TiniPosReport\Http\Controllers\Api;
 
 use App\Models\Barang;
 use Illuminate\Http\Request;
-use Krishnawijaya\DodiUkirReport\Helpers\ResponseFormatter;
-use Krishnawijaya\DodiUkirReport\Helpers\Toast;
-use Krishnawijaya\DodiUkirReport\Models\Persediaan;
+use KrishnaWijaya\TiniPosReport\Helpers\ResponseFormatter;
+use KrishnaWijaya\TiniPosReport\Helpers\Toast;
+use KrishnaWijaya\TiniPosReport\Models\Persediaan;
 
 class PersediaanController extends Controller
 {

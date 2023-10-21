@@ -1,19 +1,19 @@
 <?php
 
-namespace Krishnawijaya\DodiUkirReport\Http\Controllers;
+namespace KrishnaWijaya\TiniPosReport\Http\Controllers;
 
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Request;
-use Krishnawijaya\DodiUkirReport\Models\Pembelian;
-use Krishnawijaya\DodiUkirReport\Models\Penjualan;
+use KrishnaWijaya\TiniPosReport\Models\Pembelian;
+use KrishnaWijaya\TiniPosReport\Models\Penjualan;
 use Illuminate\Routing\Controller as BaseController;
-use Krishnawijaya\DodiUkirReport\Helpers\ResponseFormatter;
+use KrishnaWijaya\TiniPosReport\Helpers\ResponseFormatter;
 
 class DashboardController extends BaseController
 {
     public function show(Request $request)
     {
-        return view("dodiukirreport::dashboard");
+        return view("tiniposreport::dashboard");
     }
 
     public function getTopBarData(Request $request)

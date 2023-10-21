@@ -1,6 +1,6 @@
 <?php
 
-namespace Krishnawijaya\DodiUkirReport\Models;
+namespace KrishnaWijaya\TiniPosReport\Models;
 
 use TCG\Voyager\Events\MenuDisplay;
 use TCG\Voyager\Models\Menu as BaseMenu;

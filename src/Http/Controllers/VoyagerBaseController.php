@@ -1,10 +1,10 @@
 <?php
 
-namespace Krishnawijaya\DodiUkirReport\Http\Controllers;
+namespace KrishnaWijaya\TiniPosReport\Http\Controllers;
 
 use App\Models\Barang;
 use Illuminate\Http\Request;
-use Krishnawijaya\DodiUkirReport\Helpers\Toast;
+use KrishnaWijaya\TiniPosReport\Helpers\Toast;
 use TCG\Voyager\Http\Controllers\VoyagerBaseController as BaseVoyagerBaseController;
 
 class VoyagerBaseController extends BaseVoyagerBaseController

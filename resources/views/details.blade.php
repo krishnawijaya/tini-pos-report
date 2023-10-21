@@ -1,4 +1,4 @@
-@extends("dodiukirreport::master")
+@extends("tiniposreport::master")
 
 @section("vue_icon", $modelIcon)
 

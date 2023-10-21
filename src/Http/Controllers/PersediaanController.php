@@ -1,8 +1,8 @@
 <?php
 
-namespace Krishnawijaya\DodiUkirReport\Http\Controllers;
+namespace KrishnaWijaya\TiniPosReport\Http\Controllers;
 
-use Krishnawijaya\DodiUkirReport\Models\Persediaan;
+use KrishnaWijaya\TiniPosReport\Models\Persediaan;
 
 class PersediaanController extends Controller
 {

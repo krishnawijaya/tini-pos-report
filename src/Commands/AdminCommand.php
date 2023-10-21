@@ -1,8 +1,8 @@
 <?php
 
-namespace Krishnawijaya\DodiUkirReport\Commands;
+namespace KrishnaWijaya\TiniPosReport\Commands;
 
-use Krishnawijaya\DodiUkirReport\Http\Controllers\VoyagerAuthController;
+use KrishnaWijaya\TiniPosReport\Http\Controllers\VoyagerAuthController;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Str;
@@ -19,7 +19,7 @@ class AdminCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'dodiukirreport:admin';
+    protected $signature = 'tiniposreport:admin';
 
     /**
      * The console command description.

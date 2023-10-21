@@ -29,11 +29,11 @@
 @endsection
 
 @section("css")
-<link href="/vendor/dodiukirreport/css/app.css"
+<link href="/vendor/tiniposreport/css/app.css"
       rel="stylesheet">
 @endsection
 
 @section("javascript")
-<script src="/vendor/dodiukirreport/js/app.js"
+<script src="/vendor/tiniposreport/js/app.js"
         type="text/javascript"></script>
 @endsection

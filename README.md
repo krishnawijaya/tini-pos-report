@@ -1,4 +1,4 @@
-# Dodi Ukir Report
+# Tini POS Report
 # Installation
 # Usage
 # License

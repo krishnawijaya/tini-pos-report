@@ -1,6 +1,6 @@
 <?php
 
-namespace Krishnawijaya\DodiUkirReport\Database\Seeders;
+namespace KrishnaWijaya\TiniPosReport\Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use TCG\Voyager\Models\Permission;

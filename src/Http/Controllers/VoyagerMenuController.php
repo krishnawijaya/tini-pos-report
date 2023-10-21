@@ -1,6 +1,6 @@
 <?php
 
-namespace Krishnawijaya\DodiUkirReport\Http\Controllers;
+namespace KrishnaWijaya\TiniPosReport\Http\Controllers;
 
 use TCG\Voyager\Http\Controllers\VoyagerMenuController as BaseVoyagerMenuController;
 

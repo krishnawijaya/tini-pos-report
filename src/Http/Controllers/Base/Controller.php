@@ -1,6 +1,6 @@
 <?php
 
-namespace Krishnawijaya\DodiUkirReport\Http\Controllers\Base;
+namespace KrishnaWijaya\TiniPosReport\Http\Controllers\Base;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Routing\Controller as BaseController;

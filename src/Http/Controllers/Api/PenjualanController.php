@@ -1,8 +1,8 @@
 <?php
 
-namespace Krishnawijaya\DodiUkirReport\Http\Controllers\Api;
+namespace KrishnaWijaya\TiniPosReport\Http\Controllers\Api;
 
-use Krishnawijaya\DodiUkirReport\Models\Penjualan;
+use KrishnaWijaya\TiniPosReport\Models\Penjualan;
 
 class PenjualanController extends Controller
 {

@@ -1,6 +1,6 @@
 <?php
 
-namespace Krishnawijaya\DodiUkirReport\Helpers;
+namespace KrishnaWijaya\TiniPosReport\Helpers;
 
 use Illuminate\Support\Facades\Session;
 

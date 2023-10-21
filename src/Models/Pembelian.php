@@ -1,6 +1,6 @@
 <?php
 
-namespace Krishnawijaya\DodiUkirReport\Models;
+namespace KrishnaWijaya\TiniPosReport\Models;
 
 use App\Models\Barang;
 use Illuminate\Database\Eloquent\Model;

@@ -130,7 +130,7 @@
 
                 <v-toolbar-title>
                     <div class="text-white text-uppercase text-center">
-                        Dodi Ukir
+                        Tini POS
                     </div>
                 </v-toolbar-title>
 

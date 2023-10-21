@@ -2,7 +2,7 @@
     <v-container>
         <v-row>
             <v-col class="text-center text-black">
-                <div class="text-h4">Dodi Ukir</div>
+                <div class="text-h4">Tini POS</div>
                 <div class="text-caption">
                     Sistem Informasi Penjualan Kesenian Patung Bali Berbasis Web
                 </div>
