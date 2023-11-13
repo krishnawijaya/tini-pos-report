@@ -81,7 +81,12 @@ export default {
             if (this.getModelName() == 'jual') {
                 headers.splice(1, 0,
                     { title: 'Kasir', key: 'kasir' },
-                    { title: 'Pelanggan', key: 'pelanggan' },
+                )
+            }
+
+            if (this.getModelName() == 'pembelian') {
+                headers.splice(1, 0,
+                    { title: 'Supplier', key: 'supplier' },
                 )
             }
 
@@ -109,7 +114,7 @@ export default {
                 const { data } = await this.axios().get(`/api/${this.getModelName(true)}`, { params })
 
                 this.items = data.data.map((item, index) => {
-                    if (item.pelanggan) item.pelanggan = item.pelanggan.nama_pelanggan ?? ""
+                    if (item.supplier) item.supplier = item.supplier.nama_supplier ?? ""
                     if (item.user) item.kasir = item.user.name ?? ""
 
                     const listBarang = item.barang ?? []

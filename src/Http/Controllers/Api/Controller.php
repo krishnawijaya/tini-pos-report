@@ -37,7 +37,8 @@ class Controller extends BaseController
         }
 
         $data = $query->latest()->get();
-        if ($this->getModelName() == "Penjualan") $data->load('user', 'pelanggan');
+        if ($this->getModelName() == "Penjualan") $data->load('user');
+        if ($this->getModelName() == "Pembelian") $data->load('supplier');
 
         return ResponseFormatter::success($data);
     }
@@ -45,7 +46,9 @@ class Controller extends BaseController
     public function show(Request $request, $id)
     {
         $data = $this->queryBuilder()->with('barang')->findOrFail($id);
-        if ($this->getModelName() == "Penjualan") $data->load('user', 'pelanggan');
+
+        if ($this->getModelName() == "Penjualan") $data->load('user');
+        if ($this->getModelName() == "Pembelian") $data->load('supplier');
 
         return ResponseFormatter::success($data);
     }
@@ -87,10 +90,10 @@ class Controller extends BaseController
 
             if ($modelName == "jual") {
                 // TODO: Change database design, this logic will causing bug.
-                $idPelanggan = $request->input('pelanggan')['id_pelanggan'] ?? 0;
+                $idSupplier = $request->input('supplier')['id_supplier'] ?? 0;
 
                 $newRecordData->put("id_user", Auth::user()->id);
-                $newRecordData->put("id_pelanggan", $idPelanggan);
+                $newRecordData->put("id_supplier", $idSupplier);
             }
 
             $this->listBarang = $listBarang;

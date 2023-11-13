@@ -3,13 +3,13 @@
 namespace KrishnaWijaya\TiniPosReport\Http\Controllers\Api;
 
 use Carbon\Carbon;
-use App\Models\Pelanggan;
+use App\Models\Supplier;
 use Illuminate\Http\Request;
 use KrishnaWijaya\TiniPosReport\Helpers\ResponseFormatter;
 
-class PelangganController extends Controller
+class SupplierController extends Controller
 {
-    public function __construct(Pelanggan $model)
+    public function __construct(Supplier $model)
     {
         parent::__construct($model);
     }

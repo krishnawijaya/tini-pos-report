@@ -81,25 +81,6 @@
                         <v-col class="d-flex justify-center pb-0"
                                cols="12">
                             <div class="text-subtitle-2 text-uppercase font-weight-regular text-medium-emphasis">
-                                Pelanggan:
-                            </div>
-                        </v-col>
-
-                        <v-col class="d-flex justify-center pt-0"
-                               cols="12">
-                            <div class="text-h4 font-weight-regular text-medium-emphasis">
-                                {{ pelanggan }}
-                            </div>
-                        </v-col>
-                    </v-row>
-
-                    <v-divider class="border-opacity-50"
-                               thickness="2" />
-
-                    <v-row>
-                        <v-col class="d-flex justify-center pb-0"
-                               cols="12">
-                            <div class="text-subtitle-2 text-uppercase font-weight-regular text-medium-emphasis">
                                 Kasir:
                             </div>
                         </v-col>
@@ -112,8 +93,40 @@
                         </v-col>
                     </v-row>
 
+                    <v-divider class="border-opacity-50"
+                               thickness="2" />
+
                 </v-sheet>
             </v-col>
+
+            <v-col v-if="modelName.toLowerCase() == 'pembelian'"
+                   cols="12"
+                   sm="4">
+                <v-sheet class="pa-5 elevation-3"
+                         rounded="lg">
+
+                    <v-row>
+                        <v-col class="d-flex justify-center pb-0"
+                               cols="12">
+                            <div class="text-subtitle-2 text-uppercase font-weight-regular text-medium-emphasis">
+                                Supplier:
+                            </div>
+                        </v-col>
+
+                        <v-col class="d-flex justify-center pt-0"
+                               cols="12">
+                            <div class="text-h4 font-weight-regular text-medium-emphasis">
+                                {{ supplier }}
+                            </div>
+                        </v-col>
+                    </v-row>
+
+                    <v-divider class="border-opacity-50"
+                               thickness="2" />
+
+                </v-sheet>
+            </v-col>
+
         </v-row>
     </v-container>
 
@@ -219,25 +232,6 @@
                                 <v-col class="d-flex justify-center pb-0"
                                        cols="12">
                                     <div class="text-subtitle-2 text-uppercase font-weight-regular text-medium-emphasis">
-                                        Pelanggan:
-                                    </div>
-                                </v-col>
-
-                                <v-col class="d-flex justify-center pt-0"
-                                       cols="12">
-                                    <div class="text-h4 font-weight-regular text-medium-emphasis">
-                                        {{ pelanggan }}
-                                    </div>
-                                </v-col>
-                            </v-row>
-
-                            <v-divider class="border-opacity-50"
-                                       thickness="2" />
-
-                            <v-row>
-                                <v-col class="d-flex justify-center pb-0"
-                                       cols="12">
-                                    <div class="text-subtitle-2 text-uppercase font-weight-regular text-medium-emphasis">
                                         Kasir:
                                     </div>
                                 </v-col>
@@ -249,6 +243,37 @@
                                     </div>
                                 </v-col>
                             </v-row>
+
+                            <v-divider class="border-opacity-50"
+                                       thickness="2" />
+
+                        </v-sheet>
+                    </v-col>
+
+                    <v-col v-if="modelName.toLowerCase() == 'pembelian'"
+                           cols="12"
+                           sm="4">
+                        <v-sheet class="pa-5 elevation-3"
+                                 rounded="lg">
+
+                            <v-row>
+                                <v-col class="d-flex justify-center pb-0"
+                                       cols="12">
+                                    <div class="text-subtitle-2 text-uppercase font-weight-regular text-medium-emphasis">
+                                        Supplier:
+                                    </div>
+                                </v-col>
+
+                                <v-col class="d-flex justify-center pt-0"
+                                       cols="12">
+                                    <div class="text-h4 font-weight-regular text-medium-emphasis">
+                                        {{ supplier }}
+                                    </div>
+                                </v-col>
+                            </v-row>
+
+                            <v-divider class="border-opacity-50"
+                                       thickness="2" />
 
                         </v-sheet>
                     </v-col>
@@ -271,7 +296,7 @@ export default {
 
     data: () => ({
         kasir: "",
-        pelanggan: "",
+        supplier: "",
         listBarang: [],
         isPrintPage: false,
     }),
@@ -325,7 +350,7 @@ export default {
             const { data } = await this.axios().get(`/api/${this.modelName.toLowerCase()}/${id}`)
 
             this.listBarang = data.data?.barang ?? []
-            this.pelanggan = data.data?.pelanggan?.nama_pelanggan ?? ""
+            this.supplier = data.data?.supplier?.nama_supplier ?? ""
             this.kasir = data.data?.user?.name ?? ""
         },
 

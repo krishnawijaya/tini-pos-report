@@ -1,11 +1,11 @@
 <template>
     <v-container fluid>
-        <v-row v-if="modelName.toLowerCase() == 'penjualan'">
+        <v-row v-if="modelName.toLowerCase() == 'pembelian'">
             <v-col cols="12">
-                <v-autocomplete :items="listPelangganAvailable"
-                                item-title="nama_pelanggan"
-                                v-model="selectedPelanggan"
-                                label="Pelanggan"
+                <v-autocomplete :items="listSupplierAvailable"
+                                item-title="nama_supplier"
+                                v-model="selectedSupplier"
+                                label="Supplier"
                                 variant="solo"
                                 return-object
                                 hide-details />
@@ -190,8 +190,8 @@ export default {
 
     data: () => ({
         selectedBarangOnSelector: undefined,
-        selectedPelanggan: undefined,
-        listPelangganAvailable: [],
+        selectedSupplier: undefined,
+        listSupplierAvailable: [],
         listBarangAvailable: [],
         listBarangInCart: [],
         purchasePrice: "",
@@ -248,9 +248,9 @@ export default {
             this.listBarangAvailable = data.data
         },
 
-        async getListPelangganAvailable() {
-            const { data } = await this.axios().get('/api/pelanggan')
-            this.listPelangganAvailable = data.data
+        async getlistSupplierAvailable() {
+            const { data } = await this.axios().get('/api/supplier')
+            this.listSupplierAvailable = data.data
         },
 
         onSelectedBarang(barang) {
@@ -300,7 +300,7 @@ export default {
         async saveData() {
             const payload = {
                 listBarang: this.listBarangInCart,
-                pelanggan: this.selectedPelanggan,
+                supplier: this.selectedSupplier,
             }
 
             try {
@@ -327,7 +327,7 @@ export default {
 
         initPage() {
             this.getListBarangAvailable()
-            this.getListPelangganAvailable()
+            this.getlistSupplierAvailable()
         },
 
     },
