@@ -23,7 +23,7 @@
         <v-row>
             <v-col cols="12"
                    sm="4">
-                <v-card title="Pendapatan Hari Ini">
+                <v-card :title="`Pendapatan ${titleReportType} Ini`">
                     <template #text>
                         <div class="text-h4 text-right">
                             {{ currencyFormat(topbarData.revenue) }}
@@ -34,7 +34,7 @@
 
             <v-col cols="12"
                    sm="4">
-                <v-card title="Jumlah Transaksi Hari Ini">
+                <v-card :title="`Jumlah Transaksi ${titleReportType} Ini`">
                     <template #text>
                         <div class="text-h4 text-right">
                             {{ topbarData.total_transactions }}
@@ -46,7 +46,7 @@
 
             <v-col cols="12"
                    sm="4">
-                <v-card title="Laba Rugi Bulan Ini">
+                <v-card :title="`Laba Rugi ${titleReportType} Ini`">
                     <template #text>
                         <div class="text-h4 text-right">
                             {{ currencyFormat(topbarData.profit_and_loss) }}
@@ -113,22 +113,24 @@ export default {
         },
 
         reportTypes: [
-            "harian",
-            "bulanan",
-            "tahunan"
+            "Harian",
+            "Bulanan",
+            "Tahunan"
         ],
 
-        reportType: "bulanan",
+        reportType: "Bulanan",
     }),
 
     methods: {
         async getTopBarData() {
-            const { data } = await this.axios().get(`/api/dashboard/topbar?report_type=${this.reportType}`)
+            const reportType = this.reportType.toLowerCase()
+            const { data } = await this.axios().get(`/api/dashboard/topbar?report_type=${reportType}`)
             this.topbarData = data.data
         },
 
         async getChartData() {
-            const { data } = await this.axios().get(`/api/dashboard/chart?report_type=${this.reportType}`)
+            const reportType = this.reportType.toLowerCase()
+            const { data } = await this.axios().get(`/api/dashboard/chart?report_type=${reportType}`)
 
             const chartData = {
                 labels: [],
@@ -152,6 +154,21 @@ export default {
         reportType() {
             this.getChartData()
             this.getTopBarData()
+        },
+    },
+
+    computed: {
+        titleReportType() {
+            switch (this.reportType) {
+                case "Harian":
+                    return "Hari"
+
+                case "Tahunan":
+                    return "Tahun"
+
+                default:
+                    return "Bulan"
+            }
         },
     },
 
