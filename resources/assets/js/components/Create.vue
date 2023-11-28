@@ -27,7 +27,7 @@
                                 clearable>
                     <template #selection="{ item }"
                               v-if="modelName.toLowerCase() != 'pembelian'">
-                        {{ item.value.nama_barang }} - {{ currencyFormat(item.value.harga) }}
+                        {{ item.raw.nama_barang }} - {{ currencyFormat(item.raw.harga) }}
                     </template>
                 </v-autocomplete>
             </v-col>
@@ -81,11 +81,11 @@
                     </template>
 
                     <template #item.harga="{ item }">
-                        {{ currencyFormat(item.value.harga) }}
+                        {{ currencyFormat(item.harga) }}
                     </template>
 
                     <template #item.jumlah="{ item }">
-                        {{ unitFormat(item.value.jumlah, item.value.ukuran) }}
+                        {{ unitFormat(item.jumlah, item.ukuran) }}
                     </template>
 
                     <template #item.subtotal="{ item }">
@@ -245,7 +245,10 @@ export default {
 
         async getListBarangAvailable() {
             const { data } = await this.axios().get('/api/barang')
-            this.listBarangAvailable = data.data
+            this.listBarangAvailable = data.data.map(barang => {
+                barang.uid = Date.now() + (Math.random() + 1).toString(36).substring(7)
+                return barang
+            })
         },
 
         async getlistSupplierAvailable() {
@@ -256,7 +259,6 @@ export default {
         onSelectedBarang(barang) {
             if (!barang) return
             barang.jumlah = ""
-            barang.uid = Date.now() + (Math.random() + 1).toString(36).substring(7)
 
             this.selectedBarang = barang
             this.selectedBarangOnSelector = barang
@@ -265,18 +267,27 @@ export default {
         addBarang() {
             if (!this.selectedBarang.uid ||
                 !this.selectedBarang.jumlah ||
-                this.selectedBarang.jumlah < 1) return
+                this.selectedBarang.jumlah < 1 ||
+                this.selectedBarang.stok < this.selectedBarang.jumlah) {
+                return
+            }
 
             const barang = this.deepCopy(this.selectedBarang)
             if (this.modelName.toLowerCase() == 'pembelian') barang.harga = this.purchasePrice
+
+            const availableIndex = this.listBarangAvailable.findIndex(barangAvailable => barang.uid === barangAvailable.uid)
+            if (availableIndex !== -1) this.listBarangAvailable[availableIndex].stok -= barang.jumlah
 
             this.listBarangInCart.push(barang)
             this.emptySelectedBarang()
         },
 
-        removeBarangFromCart({ value }) {
-            const index = this.listBarangInCart.findIndex(item => item.uid == value.uid)
+        removeBarangFromCart({ uid, jumlah }) {
+            const index = this.listBarangInCart.findIndex(item => item.uid == uid)
             if (index == -1) return
+
+            const availableIndex = this.listBarangAvailable.findIndex(barang => uid === barang.uid)
+            if (availableIndex !== -1) this.listBarangAvailable[availableIndex].stok += Number(jumlah)
 
             this.listBarangInCart.splice(index, 1)
         },
@@ -293,8 +304,8 @@ export default {
             }
         },
 
-        countSubtotal({ value }) {
-            return this.currencyFormat((Number(value.harga) * Number(value.jumlah)) ?? 0)
+        countSubtotal(item) {
+            return this.currencyFormat((Number(item.harga) * Number(item.jumlah)) ?? 0)
         },
 
         async saveData() {

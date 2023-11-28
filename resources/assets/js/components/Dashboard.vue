@@ -1,11 +1,22 @@
 <template>
     <v-container>
         <v-row>
+            <v-col cols="2" />
+
             <v-col class="text-center text-black">
                 <div class="text-h4">Tini POS</div>
                 <div class="text-caption">
-                    Sistem Informasi Penjualan Kesenian Patung Bali Berbasis Web
+                    Sistem Informasi Point of Sales Berbasis Web
                 </div>
+            </v-col>
+
+            <v-col cols="2">
+                <v-select v-model="reportType"
+                          :items="reportTypes"
+                          variant="outlined"
+                          density="compact"
+                          base-color="#333"
+                          color="#333" />
             </v-col>
         </v-row>
 
@@ -100,30 +111,53 @@ export default {
         chartOptions: {
             responsive: true,
         },
+
+        reportTypes: [
+            "harian",
+            "bulanan",
+            "tahunan"
+        ],
+
+        reportType: "bulanan",
     }),
 
     methods: {
-
         async getTopBarData() {
-            const { data } = await this.axios().get('/api/dashboard/topbar')
+            const { data } = await this.axios().get(`/api/dashboard/topbar?report_type=${this.reportType}`)
             this.topbarData = data.data
         },
 
         async getChartData() {
-            const { data } = await this.axios().get('/api/dashboard/chart')
-            const chartData = data.data
+            const { data } = await this.axios().get(`/api/dashboard/chart?report_type=${this.reportType}`)
 
-            for (const monthName in chartData) {
-                this.chartData.labels.push(monthName)
-                this.chartData.datasets[0].data.push(chartData[monthName])
+            const chartData = {
+                labels: [],
+                datasets: [{
+                    data: [],
+                    backgroundColor: "#5f4342",
+                }],
             }
+
+            Object.keys(data.data).forEach(title => {
+                chartData.labels.push(title)
+                chartData.datasets[0].data.push(data.data[title])
+            })
+
+            this.chartData = chartData
         },
 
+    },
+
+    watch: {
+        reportType() {
+            this.getChartData()
+            this.getTopBarData()
+        },
     },
 
     created() {
         this.getChartData()
         this.getTopBarData()
-    }
+    },
 }
 </script>
