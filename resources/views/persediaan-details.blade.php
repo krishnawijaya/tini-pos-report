@@ -14,7 +14,7 @@
     <i style="vertical-align: text-bottom"
        data-icon="f"
        class="icon"></i>
-    <span>Cetak Nota</span>
+    <span>Cetak Laporan</span>
 </a>
 @endsection
 

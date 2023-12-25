@@ -40,7 +40,7 @@ class Controller extends BaseController
 
         if ($isProhibited) return abort(403);
 
-        $this->viewBaseArguments["createAbility"] = Gate::allows("create_$modelAbility");
+        $this->viewBaseArguments["createAbility"] = Gate::allows("create_$modelAbility") && $modelAbility != "persediaan";
         $this->viewBaseArguments["readAbility"] = Gate::allows("read_$modelAbility");
 
         return view("tiniposreport::$this->reportView", $this->viewBaseArguments);

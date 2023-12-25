@@ -217,7 +217,7 @@
 </template>
 
 <script>
-import { mixin } from "../helper";
+import { mixin } from "../helper"
 
 export default {
     name: "PersediaanCreate",

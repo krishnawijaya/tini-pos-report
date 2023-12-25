@@ -47,7 +47,7 @@
 </template>
 
 <script>
-import { mixin } from "../helper";
+import { mixin } from "../helper"
 
 export default {
     name: "Report",
@@ -97,7 +97,7 @@ export default {
     methods: {
         getModelName(fullForm = false) {
             const modelName = this.modelName.toLowerCase()
-            if (!fullForm && modelName == 'penjualan') return 'jual';
+            if (!fullForm && modelName == 'penjualan') return 'jual'
 
             return modelName ?? ''
         },
@@ -132,9 +132,9 @@ export default {
             }
         },
 
-        openReadPage({ value }) {
+        openReadPage(item) {
             const propertyNameID = `id_${this.getModelName(true)}`
-            location.href += `/nota/${value[propertyNameID]}`
+            location.href += `/nota/${item[propertyNameID]}`
         },
 
     },

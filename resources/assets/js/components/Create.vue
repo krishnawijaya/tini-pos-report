@@ -177,7 +177,7 @@
 </template>
 
 <script>
-import { mixin } from "../helper";
+import { mixin } from "../helper"
 
 export default {
     name: "Create",
@@ -267,16 +267,19 @@ export default {
         addBarang() {
             if (!this.selectedBarang.uid ||
                 !this.selectedBarang.jumlah ||
-                this.selectedBarang.jumlah < 1 ||
-                this.selectedBarang.stok < this.selectedBarang.jumlah) {
+                this.selectedBarang.jumlah < 1) {
                 return
             }
 
             const barang = this.deepCopy(this.selectedBarang)
             if (this.modelName.toLowerCase() == 'pembelian') barang.harga = this.purchasePrice
 
-            const availableIndex = this.listBarangAvailable.findIndex(barangAvailable => barang.uid === barangAvailable.uid)
-            if (availableIndex !== -1) this.listBarangAvailable[availableIndex].stok -= barang.jumlah
+            if (this.modelName.toLowerCase() == 'penjualan') {
+                if (this.selectedBarang.stok < this.selectedBarang.jumlah) return
+
+                const availableIndex = this.listBarangAvailable.findIndex(barangAvailable => barang.uid === barangAvailable.uid)
+                if (availableIndex !== -1) this.listBarangAvailable[availableIndex].stok -= barang.jumlah
+            }
 
             this.listBarangInCart.push(barang)
             this.emptySelectedBarang()
@@ -286,8 +289,10 @@ export default {
             const index = this.listBarangInCart.findIndex(item => item.uid == uid)
             if (index == -1) return
 
-            const availableIndex = this.listBarangAvailable.findIndex(barang => uid === barang.uid)
-            if (availableIndex !== -1) this.listBarangAvailable[availableIndex].stok += Number(jumlah)
+            if (this.modelName.toLowerCase() == 'penjualan') {
+                const availableIndex = this.listBarangAvailable.findIndex(barang => uid === barang.uid)
+                if (availableIndex !== -1) this.listBarangAvailable[availableIndex].stok += Number(jumlah)
+            }
 
             this.listBarangInCart.splice(index, 1)
         },

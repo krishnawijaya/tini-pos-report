@@ -284,7 +284,7 @@
 </template>
 
 <script>
-import { mixin } from "../helper";
+import { mixin } from "../helper"
 
 export default {
     name: "ItemDetails",
@@ -365,7 +365,7 @@ export default {
             this.getItemDetails().then(() => {
                 setTimeout(() => {
                     if (this.isPrintPage) print()
-                }, 100);
+                }, 100)
             })
         },
 
