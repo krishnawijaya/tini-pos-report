@@ -19,7 +19,7 @@ class AdminCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'tiniposreport:admin';
+    protected $signature = 'tinipos:admin:create';
 
     /**
      * The console command description.
