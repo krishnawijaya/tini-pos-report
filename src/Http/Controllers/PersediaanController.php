@@ -9,7 +9,6 @@ class PersediaanController extends Controller
     public function __construct(Persediaan $model)
     {
         $this->detailsView = "persediaan-details";
-        $this->createView = "persediaan-create";
 
         parent::__construct($model);
     }

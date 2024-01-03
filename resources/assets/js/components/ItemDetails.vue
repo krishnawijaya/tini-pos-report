@@ -25,8 +25,7 @@
             </v-col>
         </v-row>
 
-        <v-row v-if="modelName.toLowerCase() != 'persediaan'"
-               class="pt-4">
+        <v-row class="pt-4">
             <v-col cols="12"
                    sm="8">
                 <v-sheet class="pa-5 elevation-3"
@@ -176,8 +175,7 @@
                     </v-col>
                 </v-row>
 
-                <v-row v-if="modelName.toLowerCase() != 'persediaan'"
-                       class="pt-4">
+                <v-row class="pt-4">
                     <v-col cols="12"
                            sm="8">
                         <v-sheet class="pa-5 elevation-3"
@@ -311,12 +309,6 @@ export default {
                 { title: 'Subtotal', key: 'subtotal', align: 'center', sortable: false },
                 { title: '', key: 'action', align: 'center', sortable: false },
             ]
-
-            if (this.modelName.toLowerCase() == "persediaan") {
-                headers.splice(1, 0,
-                    { title: 'Jenis', key: 'pivot.jenis', align: 'center', sortable: false },
-                )
-            }
 
             return headers
         },

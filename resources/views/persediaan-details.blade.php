@@ -19,5 +19,5 @@
 @endsection
 
 @section("vue_content")
-<persediaan-details model-name="{{ $modelName }}" />
+<item-details model-name="{{ $modelName }}" />
 @endsection
