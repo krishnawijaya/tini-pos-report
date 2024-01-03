@@ -41,7 +41,7 @@
                                     Nilai Total Barang:
                                 </span>
 
-                                <span v-else>Grand Total :</span>
+                                <span v-else>Grand Total:</span>
                             </div>
                         </v-col>
 
@@ -185,7 +185,11 @@
                                        class="d-flex">
                                     <div
                                          class="d-flex align-self-center text-subtitle-2 text-uppercase font-weight-regular text-medium-emphasis">
-                                        Grand Total :
+                                        <span v-if="modelName.toLowerCase() == 'persediaan'">
+                                            Nilai Total Barang:
+                                        </span>
+
+                                        <span v-else>Grand Total:</span>
                                     </div>
                                 </v-col>
 
@@ -205,7 +209,7 @@
                                        class="d-flex">
                                     <div
                                          class="d-flex align-self-center text-subtitle-2 text-uppercase font-weight-regular text-medium-emphasis">
-                                        Jumlah Total :
+                                        Jumlah Total Barang:
                                     </div>
                                 </v-col>
 
@@ -240,9 +244,6 @@
                                 </v-col>
                             </v-row>
 
-                            <v-divider class="border-opacity-50"
-                                       thickness="2" />
-
                         </v-sheet>
                     </v-col>
 
@@ -267,9 +268,6 @@
                                     </div>
                                 </v-col>
                             </v-row>
-
-                            <v-divider class="border-opacity-50"
-                                       thickness="2" />
 
                         </v-sheet>
                     </v-col>

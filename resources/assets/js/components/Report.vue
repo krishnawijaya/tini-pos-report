@@ -30,6 +30,10 @@
                                       :headers="headers"
                                       :items="items">
 
+                    <template #item.numbering="{ index }">
+                        {{ index + 1 }}
+                    </template>
+
                     <template v-if="readAbility"
                               #item.actions="{ item }">
 
@@ -67,7 +71,7 @@ export default {
     computed: {
         headers() {
             const headers = [
-                { title: 'No.', key: 'item_no', align: 'center', sortable: false },
+                { title: 'No.', key: 'numbering', align: 'center', sortable: false },
                 { title: 'Daftar Barang', key: 'barang', sortable: false },
                 { title: 'Total Jumlah', key: `total_${this.getModelName()}`, align: 'end' },
                 { title: 'Total Harga', key: `total_harga_${this.getModelName()}`, align: 'end' },
@@ -123,7 +127,6 @@ export default {
                     item[`total_${this.getModelName()}`] = this.unitFormat(item[`total_${this.getModelName()}`])
                     item[`total_harga_${this.getModelName()}`] = this.currencyFormat(item[`total_harga_${this.getModelName()}`])
 
-                    item.item_no = index + 1
                     return item
                 })
 
