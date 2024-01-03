@@ -45,7 +45,7 @@ class Controller extends BaseController
 
     public function show(Request $request, $id)
     {
-        $data = $this->queryBuilder()->with('barang')->findOrFail($id);
+        $data = $this->queryBuilder()->with('barang.kategori')->findOrFail($id);
 
         if ($this->getModelName() == "Penjualan") $data->load('user');
         if ($this->getModelName() == "Pembelian") $data->load('supplier');

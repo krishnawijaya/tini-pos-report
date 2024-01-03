@@ -3,7 +3,7 @@
                  fluid>
         <v-row>
             <v-col>
-                <v-data-table-virtual class="elevation-3 rounded-lg"
+                <v-data-table-virtual class="elevation-3 rounded-lg pr-4"
                                       :headers="headers"
                                       :items="listBarang">
                     <template #item.numbering="{ index }">
@@ -11,11 +11,11 @@
                     </template>
 
                     <template #item.harga="{ item }">
-                        {{ currencyFormat(item.value?.pivot?.harga) }}
+                        {{ currencyFormat(item?.pivot?.harga) }}
                     </template>
 
                     <template #item.jumlah="{ item }">
-                        {{ unitFormat(item.value?.pivot?.jumlah, item?.value?.ukuran) }}
+                        {{ unitFormat(item?.pivot?.jumlah, item?.ukuran) }}
                     </template>
 
                     <template #item.subtotal="{ item }">
@@ -37,7 +37,11 @@
                                class="d-flex">
                             <div
                                  class="d-flex align-self-center text-subtitle-2 text-uppercase font-weight-regular text-medium-emphasis">
-                                Grand Total :
+                                <span v-if="modelName.toLowerCase() == 'persediaan'">
+                                    Nilai Total Barang:
+                                </span>
+
+                                <span v-else>Grand Total :</span>
                             </div>
                         </v-col>
 
@@ -57,7 +61,7 @@
                                class="d-flex">
                             <div
                                  class="d-flex align-self-center text-subtitle-2 text-uppercase font-weight-regular text-medium-emphasis">
-                                Jumlah Total :
+                                Jumlah Total Barang:
                             </div>
                         </v-col>
 
@@ -92,9 +96,6 @@
                         </v-col>
                     </v-row>
 
-                    <v-divider class="border-opacity-50"
-                               thickness="2" />
-
                 </v-sheet>
             </v-col>
 
@@ -119,9 +120,6 @@
                             </div>
                         </v-col>
                     </v-row>
-
-                    <v-divider class="border-opacity-50"
-                               thickness="2" />
 
                 </v-sheet>
             </v-col>
@@ -152,7 +150,7 @@
             <v-container class="pt-12">
                 <v-row>
                     <v-col>
-                        <v-data-table-virtual class="elevation-3 rounded-lg"
+                        <v-data-table-virtual class="elevation-3 rounded-lg pr-4"
                                               :headers="headers"
                                               :items="listBarang">
                             <template #item.numbering="{ index }">
@@ -160,11 +158,11 @@
                             </template>
 
                             <template #item.harga="{ item }">
-                                {{ currencyFormat(item.value?.pivot?.harga) }}
+                                {{ currencyFormat(item?.pivot?.harga) }}
                             </template>
 
                             <template #item.jumlah="{ item }">
-                                {{ unitFormat(item.value?.pivot?.jumlah, item.value?.ukuran) }}
+                                {{ unitFormat(item?.pivot?.jumlah, item?.ukuran) }}
                             </template>
 
                             <template #item.subtotal="{ item }">
@@ -303,11 +301,11 @@ export default {
         headers() {
             const headers = [
                 { title: 'No.', key: 'numbering', align: 'center', sortable: false },
-                { title: 'Barang', key: 'nama_barang', align: 'center', sortable: false },
-                { title: 'Harga (unit)', key: 'harga', align: 'center', sortable: false },
-                { title: 'Jumlah', key: 'jumlah', align: 'center', sortable: false },
-                { title: 'Subtotal', key: 'subtotal', align: 'center', sortable: false },
-                { title: '', key: 'action', align: 'center', sortable: false },
+                { title: 'Nama Barang', key: 'nama_barang' },
+                { title: 'Kategori', key: 'kategori.nama_kategori' },
+                { title: 'Harga (unit)', key: 'harga', align: 'end' },
+                { title: 'Jumlah', key: 'jumlah', align: 'end' },
+                { title: 'Subtotal', key: 'subtotal', align: 'end' },
             ]
 
             return headers
@@ -346,8 +344,8 @@ export default {
             this.kasir = data.data?.user?.name ?? ""
         },
 
-        countSubtotal({ value }) {
-            return this.currencyFormat((Number(value?.pivot?.harga) * Number(value?.pivot?.jumlah)) ?? 0)
+        countSubtotal(item) {
+            return this.currencyFormat((Number(item?.pivot?.harga) * Number(item?.pivot?.jumlah)) ?? 0)
         },
 
         initPage() {

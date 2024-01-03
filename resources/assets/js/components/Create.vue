@@ -205,10 +205,10 @@ export default {
 
         headers: [
             { title: 'No.', key: 'numbering', align: 'center', sortable: false },
-            { title: 'Barang', key: 'nama_barang', align: 'center', sortable: false },
-            { title: 'Harga (unit)', key: 'harga', align: 'center', sortable: false },
-            { title: 'Jumlah', key: 'jumlah', align: 'center', sortable: false },
-            { title: 'Subtotal', key: 'subtotal', align: 'center', sortable: false },
+            { title: 'Nama Barang', key: 'nama_barang'},
+            { title: 'Harga (unit)', key: 'harga', align: 'end'},
+            { title: 'Jumlah', key: 'jumlah', align: 'end'},
+            { title: 'Subtotal', key: 'subtotal', align: 'end'},
             { title: '', key: 'action', align: 'center', sortable: false },
         ],
     }),
