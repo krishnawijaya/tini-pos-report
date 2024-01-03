@@ -22,7 +22,6 @@ Route::group(['as' => 'tiniposreport.', 'namespace' => 'KrishnaWijaya\TiniPosRep
     Route::get('/penjualan', 'PenjualanController@showReport')->name('penjualan.report');
 
     Route::get('/pembelian/create', 'PembelianController@create')->name('pembelian.create');
-    Route::get('/persediaan/create', 'PersediaanController@create')->name('persediaan.create');
     Route::get('/penjualan/create', 'PenjualanController@create')->name('penjualan.create');
 
     Route::group(['prefix' => 'api', 'namespace' => 'Api', 'as' => 'api.'], function () {
@@ -38,7 +37,6 @@ Route::group(['as' => 'tiniposreport.', 'namespace' => 'KrishnaWijaya\TiniPosRep
         Route::get('/penjualan/{id}', 'PenjualanController@show')->name('penjualan.show');
 
         Route::post('/pembelian', 'PembelianController@create')->name('pembelian.create');
-        Route::post('/persediaan', 'PersediaanController@create')->name('persediaan.create');
         Route::post('/penjualan', 'PenjualanController@create')->name('penjualan.create');
     });
 });
