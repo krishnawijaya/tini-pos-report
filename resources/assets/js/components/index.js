@@ -3,6 +3,7 @@ import Report from "./Report.vue"
 import BarChart from "./BarChart.vue"
 import Dashboard from "./Dashboard.vue"
 import ItemDetails from "./ItemDetails.vue"
+import StockOpnameCreate from "./StockOpnameCreate.vue"
 
 export {
     Create,
@@ -10,4 +11,5 @@ export {
     BarChart,
     Dashboard,
     ItemDetails,
+    StockOpnameCreate,
 }
