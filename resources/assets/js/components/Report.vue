@@ -136,8 +136,16 @@ export default {
         },
 
         openReadPage(item) {
-            const propertyNameID = `id_${this.getModelName(true)}`
-            location.href += `/nota/${item[propertyNameID]}`
+            const modelName = this.getModelName(true)
+            const propertyNameID = `id_${modelName}`
+
+            const routes = [
+                modelName,
+                modelName === "persediaan" ? "laporan" : "nota",
+                item[propertyNameID],
+            ]
+
+            location.href = `/${routes.join("/")}`
         },
 
     },

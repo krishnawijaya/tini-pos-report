@@ -6,10 +6,10 @@ use KrishnaWijaya\TiniPosReport\Models\Persediaan;
 
 class PersediaanController extends Controller
 {
+    public $detailsView = "persediaan-details";
+
     public function __construct(Persediaan $model)
     {
-        $this->detailsView = "persediaan-details";
-
         parent::__construct($model);
     }
 }

@@ -3,6 +3,7 @@
 namespace KrishnaWijaya\TiniPosReport\Http\Controllers\Base;
 
 use Illuminate\Database\Eloquent\Model;
+use KrishnaWijaya\TiniPosReport\Helpers\Str;
 use Illuminate\Routing\Controller as BaseController;
 
 class Controller extends BaseController
@@ -14,9 +15,10 @@ class Controller extends BaseController
         $this->model = $model;
     }
 
-    public function getModelName($forceLowerCase = false, $abbreviation = false)
+    public function getModelName($forceLowerCase = false, $abbreviation = false, $separator = "-")
     {
         $modelName = class_basename($this->model);
+        $modelName = Str::fromCamelorPascalCase($modelName, $separator);
 
         if ($forceLowerCase) $modelName = strtolower($modelName);
         if ($abbreviation && strtolower($modelName) == "penjualan") $modelName = "jual";

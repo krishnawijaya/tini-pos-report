@@ -25,6 +25,12 @@ class PermissionSeeder extends Seeder
             'create_penjualan',
             'read_penjualan',
         ],
+
+        'stock_opname' => [
+            'browse_stock_opname',
+            'create_stock_opname',
+            'read_stock_opname',
+        ],
     ];
 
     /**

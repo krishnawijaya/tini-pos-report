@@ -27,7 +27,8 @@ class Controller extends BaseController
 
     public function showDetails(Request $request, $id)
     {
-        $isProhibited = Gate::denies("read_{$this->getModelName(true)}");
+        $modelAbility = $this->getModelName(true, false, '_');
+        $isProhibited = Gate::denies("read_{$modelAbility}");
         if ($isProhibited) return abort(403);
 
         return view("tiniposreport::$this->detailsView", $this->viewBaseArguments);
@@ -35,7 +36,7 @@ class Controller extends BaseController
 
     public function showReport(Request $request)
     {
-        $modelAbility = $this->getModelName(true);
+        $modelAbility = $this->getModelName(true, false, '_');
         $isProhibited = Gate::denies("browse_$modelAbility");
 
         if ($isProhibited) return abort(403);
@@ -48,7 +49,8 @@ class Controller extends BaseController
 
     public function create(Request $request)
     {
-        $isProhibited = Gate::denies("create_{$this->getModelName(true)}");
+        $modelAbility = $this->getModelName(true, false, '_');
+        $isProhibited = Gate::denies("create_$modelAbility");
         if ($isProhibited) return abort(403);
 
         $this->viewBaseArguments["roleName"] = Auth::user()->role->name;
