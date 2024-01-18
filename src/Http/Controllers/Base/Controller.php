@@ -20,10 +20,10 @@ class Controller extends BaseController
         $modelName = class_basename($this->model);
         $modelName = Str::fromCamelorPascalCase($modelName, $separator);
 
-        if ($forceLowerCase) $modelName = strtolower($modelName);
         if ($abbreviation && strtolower($modelName) == "penjualan") $modelName = "jual";
 
-        return $modelName;
+        if ($forceLowerCase) return strtolower($modelName);
+        return ucfirst($modelName);
     }
 
     public function getModelIcon()

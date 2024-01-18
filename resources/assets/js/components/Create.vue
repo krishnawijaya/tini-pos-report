@@ -25,10 +25,17 @@
                                 return-object
                                 hide-details
                                 clearable>
-                    <template #selection="{ item }"
-                              v-if="modelName.toLowerCase() != 'pembelian'">
-                        {{ item.raw.nama_barang }} - {{ currencyFormat(item.raw.harga) }}
+                    <template #selection="{ item }">
+                        {{ item.raw.nama_barang }} ({{ item.raw.ukuran }})
+
+                        <span v-if="modelName.toLowerCase() != 'pembelian'">
+                            - {{ currencyFormat(item.raw.harga) }}
+                        </span>
                     </template>
+
+                    <!-- <template #item="{ item }">
+                        {{ item.raw.nama_barang }} ({{ item.raw.ukuran }})
+                    </template> -->
                 </v-autocomplete>
             </v-col>
 
