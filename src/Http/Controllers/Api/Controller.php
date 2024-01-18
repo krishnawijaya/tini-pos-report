@@ -89,10 +89,10 @@ class Controller extends BaseController
             ]);
 
             if ($modelName == "jual") {
-                // TODO: Change database design, this logic will causing bug.
-                $idSupplier = $request->input('supplier')['id_supplier'] ?? 0;
-
                 $newRecordData->put("id_user", Auth::user()->id);
+
+            } else if ($modelName == "pembelian") {
+                $idSupplier = $request->input('supplier')['id_supplier'] ?? 0;
                 $newRecordData->put("id_supplier", $idSupplier);
             }
 
