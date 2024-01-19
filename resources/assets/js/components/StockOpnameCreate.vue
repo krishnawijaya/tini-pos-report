@@ -215,7 +215,7 @@ export default {
             { title: 'Jumlah Tercatat', key: 'jumlah_tercatat', align: 'end' },
             { title: 'Jumlah Nyata', key: 'jumlah_nyata', align: 'end' },
             { title: 'Subtotal Nyata', key: 'subtotal', align: 'end' },
-            { title: 'Alasan', key: 'alasan', align: 'end' },
+            { title: 'Alasan', key: 'pivot.alasan', align: 'end' },
             { title: '', key: 'action', align: 'center', sortable: false },
         ],
     }),
