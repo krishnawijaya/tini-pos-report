@@ -14,8 +14,12 @@
                         {{ currencyFormat(item?.pivot?.harga) }}
                     </template>
 
-                    <template #item.jumlah="{ item }">
-                        {{ unitFormat(item?.pivot?.jumlah, item?.ukuran) }}
+                    <template #item.jumlah_nyata="{ item }">
+                        {{ unitFormat(item?.pivot?.jumlah_nyata, item?.ukuran) }}
+                    </template>
+
+                    <template #item.jumlah_tercatat="{ item }">
+                        {{ unitFormat(item?.pivot?.jumlah_tercatat, item?.ukuran) }}
                     </template>
 
                     <template #item.subtotal="{ item }">
@@ -37,11 +41,7 @@
                                class="d-flex">
                             <div
                                  class="d-flex align-self-center text-subtitle-2 text-uppercase font-weight-regular text-medium-emphasis">
-                                <span v-if="modelName.toLowerCase() == 'persediaan'">
-                                    Nilai Total Barang:
-                                </span>
-
-                                <span v-else>Grand Total:</span>
+                                Total Nilai Barang Nyata:
                             </div>
                         </v-col>
 
@@ -61,7 +61,7 @@
                                class="d-flex">
                             <div
                                  class="d-flex align-self-center text-subtitle-2 text-uppercase font-weight-regular text-medium-emphasis">
-                                Jumlah Total Barang:
+                                Jumlah Total Nyata:
                             </div>
                         </v-col>
 
@@ -161,8 +161,12 @@
                                 {{ currencyFormat(item?.pivot?.harga) }}
                             </template>
 
-                            <template #item.jumlah="{ item }">
-                                {{ unitFormat(item?.pivot?.jumlah, item?.ukuran) }}
+                            <template #item.jumlah_nyata="{ item }">
+                                {{ unitFormat(item?.pivot?.jumlah_nyata, item?.ukuran) }}
+                            </template>
+
+                            <template #item.jumlah_tercatat="{ item }">
+                                {{ unitFormat(item?.pivot?.jumlah_tercatat, item?.ukuran) }}
                             </template>
 
                             <template #item.subtotal="{ item }">
@@ -302,8 +306,9 @@ export default {
                 { title: 'Nama Barang', key: 'nama_barang' },
                 { title: 'Kategori', key: 'kategori.nama_kategori' },
                 { title: 'Harga (unit)', key: 'harga', align: 'end' },
-                { title: 'Jumlah', key: 'jumlah', align: 'end' },
-                { title: 'Subtotal', key: 'subtotal', align: 'end' },
+                { title: 'Jumlah Tercatat', key: 'jumlah_tercatat', align: 'end' },
+                { title: 'Jumlah Nyata', key: 'jumlah_nyata', align: 'end' },
+                { title: 'Subtotal Nyata', key: 'subtotal', align: 'end' },
             ]
 
             return headers
@@ -313,7 +318,7 @@ export default {
             let grandTotal = 0
 
             this.listBarang.forEach(barang => {
-                const subtotal = (Number(barang?.pivot?.harga) * Number(barang?.pivot?.jumlah)) ?? 0
+                const subtotal = (Number(barang?.pivot?.harga) * Number(barang?.pivot?.jumlah_nyata)) ?? 0
                 grandTotal += subtotal
             })
 
@@ -322,7 +327,7 @@ export default {
 
         quantityTotal() {
             let quantityTotal = 0
-            this.listBarang.forEach(barang => quantityTotal += Number(barang?.pivot?.jumlah) ?? 0)
+            this.listBarang.forEach(barang => quantityTotal += Number(barang?.pivot?.jumlah_nyata) ?? 0)
 
             return this.unitFormat(quantityTotal)
         },
@@ -343,7 +348,7 @@ export default {
         },
 
         countSubtotal(item) {
-            return this.currencyFormat((Number(item?.pivot?.harga) * Number(item?.pivot?.jumlah)) ?? 0)
+            return this.currencyFormat((Number(item?.pivot?.harga) * Number(item?.pivot?.jumlah_nyata)) ?? 0)
         },
 
         initPage() {

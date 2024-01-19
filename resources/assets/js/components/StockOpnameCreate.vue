@@ -17,7 +17,7 @@
                         {{ item.raw.nama_barang }} ({{ item.raw.ukuran }})
 
                         <span v-if="modelName.toLowerCase() != 'pembelian'">
-                            - {{ currencyFormat(item.raw.harga) }}
+                            &nbsp;-&nbsp;{{ currencyFormat(item.raw.harga) }}
                         </span>
                     </template>
 
@@ -138,7 +138,7 @@
                                class="d-flex">
                             <div
                                  class="d-flex align-self-center text-subtitle-2 text-uppercase font-weight-regular text-medium-emphasis">
-                                Jumlah Total Nyata :
+                                Jumlah Total Nyata:
                             </div>
                         </v-col>
 

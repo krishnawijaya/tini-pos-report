@@ -29,7 +29,7 @@
                         {{ item.raw.nama_barang }} ({{ item.raw.ukuran }})
 
                         <span v-if="modelName.toLowerCase() != 'pembelian'">
-                            - {{ currencyFormat(item.raw.harga) }}
+                            &nbsp;-&nbsp;{{ currencyFormat(item.raw.harga) }}
                         </span>
                     </template>
 
