@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use KrishnaWijaya\TiniPosReport\Helpers\Toast;
 use KrishnaWijaya\TiniPosReport\Models\StockOpname;
 use KrishnaWijaya\TiniPosReport\Helpers\ResponseFormatter;
+use KrishnaWijaya\TiniPosReport\Models\Penyesuaian;
 
 class StockOpnameController extends Controller
 {
@@ -52,6 +53,8 @@ class StockOpnameController extends Controller
 
             $this->listBarang = $listBarang;
             $this->newRecord = $this->queryBuilder()->create($newRecordData->toArray());
+
+            Penyesuaian::create(['nilai' => $totalHargaNyata - $totalHargaTercatat]);
 
             $this->makeTransactions();
             return ResponseFormatter::success($this->newRecord);
