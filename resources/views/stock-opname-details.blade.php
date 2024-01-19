@@ -19,5 +19,5 @@
 @endsection
 
 @section("vue_content")
-<stock-opname-details model-name="{{ $modelName }}" />
+<stock-opname-item-details model-name="{{ $modelName }}" />
 @endsection
