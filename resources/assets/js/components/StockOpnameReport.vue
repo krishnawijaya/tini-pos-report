@@ -34,6 +34,22 @@
                         {{ index + 1 }}
                     </template>
 
+                    <template #item.total_tercatat="{ item }">
+                        {{ unitFormat(item?.total_tercatat) }}
+                    </template>
+
+                    <template #item.total_harga_tercatat="{ item }">
+                        {{ currencyFormat(item?.total_harga_tercatat) }}
+                    </template>
+
+                    <template #item.total_nyata="{ item }">
+                        {{ unitFormat(item?.total_nyata) }}
+                    </template>
+
+                    <template #item.total_harga_nyata="{ item }">
+                        {{ currencyFormat(item?.total_harga_nyata) }}
+                    </template>
+
                     <template v-if="readAbility"
                               #item.actions="{ item }">
 
@@ -113,9 +129,6 @@ export default {
 
                     const listBarang = item.barang ?? []
                     item.barang = [...new Set(listBarang.map(barang => barang.nama_barang).filter(namaBarang => namaBarang))].join(', ')
-
-                    item[`total_${this.getModelName()}`] = this.unitFormat(item[`total_${this.getModelName()}`])
-                    item[`total_harga_${this.getModelName()}`] = this.currencyFormat(item[`total_harga_${this.getModelName()}`])
 
                     return item
                 })
