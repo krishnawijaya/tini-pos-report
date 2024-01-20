@@ -6,7 +6,7 @@
             <v-col class="text-center text-black">
                 <div class="text-h4">Tini POS</div>
                 <div class="text-caption">
-                    Sistem Informasi Point of Sales Berbasis Web AMANDA
+                    Sistem Informasi Point of Sales Berbasis Web
                 </div>
             </v-col>
 
