@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use KrishnaWijaya\TiniPosReport\Models\Pembelian;
 use KrishnaWijaya\TiniPosReport\Models\Penjualan;
+use KrishnaWijaya\TiniPosReport\Models\Penyesuaian;
 use Illuminate\Routing\Controller as BaseController;
 use KrishnaWijaya\TiniPosReport\Helpers\ResponseFormatter;
 
@@ -20,28 +21,32 @@ class DashboardController extends BaseController
     {
         $reportType = $request->input("report_type", "bulanan");
 
+        $totalPenyesuaianQuery = Penyesuaian::whereYear('created_at', Carbon::now()->year);
         $totalPenjualanQuery = Penjualan::whereYear('created_at', Carbon::now()->year);
         $totalPembelianQuery = Pembelian::whereYear('created_at', Carbon::now()->year);
         $todayQuery = Penjualan::whereYear('created_at', Carbon::now()->year);
 
         if (in_array($reportType, ["bulanan", "harian"])) {
+            $totalPenyesuaianQuery->whereMonth('created_at', Carbon::now()->month);
             $totalPenjualanQuery->whereMonth('created_at', Carbon::now()->month);
             $totalPembelianQuery->whereMonth('created_at', Carbon::now()->month);
             $todayQuery->whereMonth('created_at', Carbon::now()->month);
 
             if ($reportType == "harian") {
+                $totalPenyesuaianQuery->whereDay('created_at', Carbon::now()->day);
                 $totalPenjualanQuery->whereDay('created_at', Carbon::now()->day);
                 $totalPembelianQuery->whereDay('created_at', Carbon::now()->day);
                 $todayQuery->whereDay('created_at', Carbon::now()->day);
             }
         }
 
+        $totalPenyesuaian = $totalPenyesuaianQuery->sum('nilai');
         $totalPenjualan = $totalPenjualanQuery->sum('total_harga_jual');
         $totalPembelian = $totalPembelianQuery->sum('total_harga_pembelian');
 
         $revenue = $todayQuery->sum('total_harga_jual');
         $totalTransactions = $todayQuery->count();
-        $profitLoss = $totalPenjualan - $totalPembelian;
+        $profitLoss = ($totalPenjualan - $totalPembelian) + $totalPenyesuaian;
 
         $response = [
             "revenue" => $revenue,

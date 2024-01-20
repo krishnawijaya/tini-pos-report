@@ -1,7 +1,7 @@
 <template>
     <v-container fluid>
         <v-row class="mb-4">
-            <v-col sm="3" cols="12">
+            <v-col cols="12">
                 <v-autocomplete :items="listBarangAvailable"
                                 @update:modelValue="onSelectedBarang"
                                 @click:clear="emptySelectedBarang"
@@ -11,10 +11,31 @@
                                 variant="solo"
                                 return-object
                                 hide-details
-                                clearable />
+                                clearable>
+
+                    <template #selection="{ item }">
+                        {{ item.raw.nama_barang }} ({{ item.raw.ukuran }})
+
+                        <span v-if="modelName.toLowerCase() != 'pembelian'">
+                            &nbsp;-&nbsp;{{ currencyFormat(item.raw.harga) }}
+                        </span>
+                    </template>
+
+                    <!-- <template #item="{ item }">
+                        {{ item.raw.nama_barang }} ({{ item.raw.ukuran }})
+                    </template> -->
+                </v-autocomplete>
             </v-col>
 
-            <v-col sm="3" cols="12">
+            <v-col sm="2" cols="12">
+                <v-text-field v-model="selectedBarang.jumlah"
+                              label="Jumlah Nyata"
+                              variant="solo"
+                              hide-details />
+
+            </v-col>
+
+            <v-col sm="2" cols="12">
                 <v-text-field :model-value="unitFormat(selectedBarang.stok, selectedBarang.ukuran)"
                               class="cursor-not-allowed"
                               label="Jumlah Tercatat"
@@ -25,17 +46,7 @@
 
             </v-col>
 
-            <v-col sm="2" cols="12">
-                <v-text-field v-model="selectedBarang.jumlah"
-                              @keyup.enter="addBarang"
-                              label="Jumlah Nyata"
-                              variant="solo"
-                              hide-details />
-
-            </v-col>
-
-            <v-col cols="9"
-                   sm="3">
+            <v-col cols="9" sm="3">
                 <v-text-field :model-value="countSelectedBarangSubtotal"
                               class="cursor-not-allowed"
                               label="Subtotal Nilai Barang"
@@ -44,9 +55,15 @@
                               readOnly />
             </v-col>
 
-            <v-col class="d-flex justify-end"
-                   cols="3"
-                   sm="1">
+            <v-col sm="4" cols="12">
+                <v-text-field v-model="selectedBarang.alasan"
+                              @keyup.enter="addBarang"
+                              label="Alasan"
+                              variant="solo"
+                              hide-details />
+            </v-col>
+
+            <v-col class="d-flex justify-end" cols="3" sm="1">
                 <v-btn @click="addBarang"
                        color="blue-darken-4"
                        icon="mdi-plus" />
@@ -101,7 +118,7 @@
                                class="d-flex">
                             <div
                                  class="d-flex align-self-center text-subtitle-2 text-uppercase font-weight-regular text-medium-emphasis">
-                                Total Nilai Barang:
+                                Total Nilai Barang Nyata:
                             </div>
                         </v-col>
 
@@ -121,7 +138,7 @@
                                class="d-flex">
                             <div
                                  class="d-flex align-self-center text-subtitle-2 text-uppercase font-weight-regular text-medium-emphasis">
-                                Jumlah Total Nyata :
+                                Jumlah Total Nyata:
                             </div>
                         </v-col>
 
@@ -187,6 +204,7 @@ export default {
             stok: 0,
             harga: 0,
             jumlah: "",
+            alasan: "",
         },
 
         headers: [
@@ -196,7 +214,8 @@ export default {
             { title: 'Harga (unit)', key: 'harga', align: 'end' },
             { title: 'Jumlah Tercatat', key: 'jumlah_tercatat', align: 'end' },
             { title: 'Jumlah Nyata', key: 'jumlah_nyata', align: 'end' },
-            { title: 'Subtotal Nilai', key: 'subtotal', align: 'end' },
+            { title: 'Subtotal Nyata', key: 'subtotal', align: 'end' },
+            { title: 'Alasan', key: 'alasan', align: 'end' },
             { title: '', key: 'action', align: 'center', sortable: false },
         ],
     }),
@@ -247,6 +266,7 @@ export default {
         onSelectedBarang(barang) {
             if (!barang) return
             barang.jumlah = ""
+            barang.alasan = ""
 
             this.selectedBarang = barang
             this.selectedBarangOnSelector = barang
@@ -254,21 +274,11 @@ export default {
 
         addBarang() {
             if (!this.selectedBarang.uid ||
-                !this.selectedBarang.jumlah ||
-                this.selectedBarang.jumlah < 1) {
+                !this.selectedBarang.jumlah) {
                 return
             }
 
             const barang = this.deepCopy(this.selectedBarang)
-            if (this.modelName.toLowerCase() == 'pembelian') barang.harga = this.purchasePrice
-
-            if (this.modelName.toLowerCase() == 'penjualan') {
-                if (this.selectedBarang.stok < this.selectedBarang.jumlah) return
-
-                const availableIndex = this.listBarangAvailable.findIndex(barangAvailable => barang.uid === barangAvailable.uid)
-                if (availableIndex !== -1) this.listBarangAvailable[availableIndex].stok -= barang.jumlah
-            }
-
             this.listBarangInCart.push(barang)
             this.emptySelectedBarang()
         },
@@ -276,11 +286,6 @@ export default {
         removeBarangFromCart({ uid, jumlah }) {
             const index = this.listBarangInCart.findIndex(item => item.uid == uid)
             if (index == -1) return
-
-            if (this.modelName.toLowerCase() == 'penjualan') {
-                const availableIndex = this.listBarangAvailable.findIndex(barang => uid === barang.uid)
-                if (availableIndex !== -1) this.listBarangAvailable[availableIndex].stok += Number(jumlah)
-            }
 
             this.listBarangInCart.splice(index, 1)
         },
@@ -294,6 +299,7 @@ export default {
                 stok: 0,
                 harga: 0,
                 jumlah: "",
+                alasan: "",
             }
         },
 
