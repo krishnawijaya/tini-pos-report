@@ -31,9 +31,15 @@
 @section("css")
 <link href="/vendor/tiniposreport/css/app.css"
       rel="stylesheet">
+
+<link href="cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.css"
+      rel="stylesheet">
 @endsection
 
 @section("javascript")
 <script src="/vendor/tiniposreport/js/app.js"
+        type="text/javascript"></script>
+
+<script src="cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.js"
         type="text/javascript"></script>
 @endsection

@@ -276,14 +276,14 @@ export default {
             if (!this.selectedBarang.uid ||
                 !this.selectedBarang.jumlah ||
                 this.selectedBarang.jumlah < 1) {
-                return
+                return toastr.warning("Mohon inputkan jumlah barang!")
             }
 
             const barang = this.deepCopy(this.selectedBarang)
             if (this.modelName.toLowerCase() == 'pembelian') barang.harga = this.purchasePrice
 
             if (this.modelName.toLowerCase() == 'penjualan') {
-                if (this.selectedBarang.stok < this.selectedBarang.jumlah) return
+                if (this.selectedBarang.stok < this.selectedBarang.jumlah) return toastr.warning(`Tersedia: ${this.selectedBarang.stok} ${this.selectedBarang.ukuran}`, `Stok tidak mencukupi!`)
 
                 const availableIndex = this.listBarangAvailable.findIndex(barangAvailable => barang.uid === barangAvailable.uid)
                 if (availableIndex !== -1) this.listBarangAvailable[availableIndex].stok -= barang.jumlah
