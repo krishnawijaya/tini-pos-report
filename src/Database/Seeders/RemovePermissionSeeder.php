@@ -15,6 +15,10 @@ class RemovePermissionSeeder extends Seeder
             'add_pelanggan',
             'delete_pelanggan',
         ],
+
+        'persediaan' => [
+            'create_persediaan',
+        ],
     ];
 
     /**

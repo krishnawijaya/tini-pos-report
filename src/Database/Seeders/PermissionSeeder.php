@@ -16,7 +16,6 @@ class PermissionSeeder extends Seeder
 
         'persediaan' => [
             'browse_persediaan',
-            'create_persediaan',
             'read_persediaan',
         ],
 
