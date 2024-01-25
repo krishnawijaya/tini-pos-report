@@ -30,7 +30,7 @@ class RemovePermissionSeeder extends Seeder
     {
         foreach (self::PERMISSIONS as $tableName => $permissions) {
             foreach ($permissions as $key) {
-                $permission = Permission::where('key', $key)->where('table_name', $tableName)->first();
+                $permission = Permission::where('key', $key)->where('table_name', $tableName);
                 if ($permission) $permission->forceDelete();
             }
         }
