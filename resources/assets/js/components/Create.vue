@@ -221,6 +221,12 @@ export default {
         ],
     }),
 
+    watch: {
+        selectedSupplier() {
+            this.getListBarangAvailable()
+        },
+    },
+
     computed: {
 
         grandTotal() {
@@ -252,7 +258,9 @@ export default {
     methods: {
 
         async getListBarangAvailable() {
-            const { data } = await this.axios().get('/api/barang')
+            if (!this.selectedSupplier) return toastr.info("Pilih supplier untuk menampilkan daftar barang.", "Langkah Pertama")
+            const { data } = await this.axios().get(`/api/barang-by-supplier/${this.selectedSupplier.id_supplier}`)
+
             this.listBarangAvailable = data.data.map(barang => {
                 barang.uid = Date.now() + (Math.random() + 1).toString(36).substring(7)
                 return barang

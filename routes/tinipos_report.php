@@ -30,6 +30,7 @@ Route::group(['as' => 'tiniposreport.', 'namespace' => 'KrishnaWijaya\TiniPosRep
 
     Route::group(['prefix' => 'api', 'namespace' => 'Api', 'as' => 'api.'], function () {
         Route::get('/barang', 'BarangController@index')->name('barang.index');
+        Route::get('/barang-by-supplier/{id}', 'BarangController@getBySupplierId')->name('barang.getBySupplierId');
         Route::get('/supplier', 'SupplierController@index')->name('supplier.index');
 
         Route::get('/pembelian', 'PembelianController@index')->name('pembelian.index');
