@@ -21,5 +21,6 @@
 
 @section("vue_content")
 <report model-name="{{ $modelName }}"
-        :read-ability="{{ $readAbility ? 'true' : 'false' }}" />
+        :read-ability="{{ $readAbility ? 'true' : 'false' }}"
+        :edit-ability="{{ $editAbility ? 'true' : 'false' }}" />
 @endsection

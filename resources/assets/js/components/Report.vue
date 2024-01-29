@@ -34,13 +34,22 @@
                         {{ index + 1 }}
                     </template>
 
-                    <template v-if="readAbility"
-                              #item.actions="{ item }">
+                    <template #item.actions="{ item }">
 
-                        <v-btn @click="openReadPage(item)"
+                        <v-btn v-if="readAbility"
+                               @click="openReadPage(item)"
                                color="yellow-darken-4"
                                variant="tonal"
                                icon="mdi-eye"
+                               class="mx-1"
+                               size="small" />
+
+                        <v-btn v-if="editAbility"
+                               @click="openReadPage(item)"
+                               color="blue-darken-4"
+                               variant="tonal"
+                               icon="mdi-pencil"
+                               class="mx-1"
                                size="small" />
 
                     </template>
@@ -60,6 +69,7 @@ export default {
     props: {
         modelName: String,
         readAbility: Boolean,
+        editAbility: Boolean,
     },
 
     data: () => ({
@@ -78,7 +88,7 @@ export default {
                 { title: 'Tanggal', key: `tanggal_${this.getModelName()}`, align: 'center', sortable: false },
             ]
 
-            if (this.readAbility) {
+            if (this.readAbility || this.editAbility) {
                 headers.push({ title: '', key: 'actions', align: 'center', sortable: false })
             }
 

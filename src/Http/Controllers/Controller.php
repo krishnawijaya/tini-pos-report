@@ -43,6 +43,7 @@ class Controller extends BaseController
 
         $this->viewBaseArguments["createAbility"] = Gate::allows("create_$modelAbility") && $modelAbility != "persediaan";
         $this->viewBaseArguments["readAbility"] = Gate::allows("read_$modelAbility");
+        $this->viewBaseArguments["editAbility"] = Gate::allows("edit_$modelAbility");
 
         return view("tiniposreport::$this->reportView", $this->viewBaseArguments);
     }
