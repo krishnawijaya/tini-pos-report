@@ -3,7 +3,7 @@
 @section("vue_icon", $modelIcon)
 
 @section("vue_page_title")
-{{ "Buat " . $modelName }}
+{{ "Buat " . ucwords(str_replace("-", " ", $modelName)) }}
 @endsection
 
 @section("vue_content")
