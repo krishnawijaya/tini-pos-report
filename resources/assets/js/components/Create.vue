@@ -258,10 +258,20 @@ export default {
     methods: {
 
         async getListBarangAvailable() {
-            if (!this.selectedSupplier) return toastr.info("Pilih supplier untuk menampilkan daftar barang.", "Langkah Pertama")
-            const { data } = await this.axios().get(`/api/barang-by-supplier/${this.selectedSupplier.id_supplier}`)
+            let barangs = []
 
-            this.listBarangAvailable = data.data.map(barang => {
+            if (this.modelName.toLowerCase() == 'pembelian') {
+                if (!this.selectedSupplier) return toastr.info("Pilih supplier untuk menampilkan daftar barang.", "Langkah Pertama")
+
+                const { data } = await this.axios().get(`/api/barang-by-supplier/${this.selectedSupplier.id_supplier}`)
+                barangs = data.data ?? []
+
+            } else {
+                const { data } = await this.axios().get('/api/barang')
+                barangs = data.data ?? []
+            }
+
+            this.listBarangAvailable = barangs.map(barang => {
                 barang.uid = Date.now() + (Math.random() + 1).toString(36).substring(7)
                 return barang
             })

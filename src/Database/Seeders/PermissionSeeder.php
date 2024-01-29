@@ -11,6 +11,7 @@ class PermissionSeeder extends Seeder
         'pembelian' => [
             'browse_pembelian',
             'create_pembelian',
+            'edit_pembelian',
             'read_pembelian',
         ],
 
@@ -22,12 +23,14 @@ class PermissionSeeder extends Seeder
         'penjualan' => [
             'browse_penjualan',
             'create_penjualan',
+            'edit_penjualan',
             'read_penjualan',
         ],
 
         'stock_opname' => [
             'browse_stock_opname',
             'create_stock_opname',
+            'edit_stock_opname',
             'read_stock_opname',
         ],
     ];
